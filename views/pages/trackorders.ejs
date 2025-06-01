@@ -1,0 +1,270 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Track Your Orders</title>
+    <style> 
+     
+
+       .encl {
+         min-width:100px;
+         margin-left:15px;
+         margin-right:15px;
+       }
+ 
+
+.notification {
+    width: calc(100% - 40px); /* Subtract margins to fit within the viewport */
+     background-color: #e74c3c; /* Red background for error */
+    color: white; /* White text color */ 
+    box-sizing:border-box;
+    position: fixed;
+    z-index:100;
+    margin-top:20px; 
+    padding:15px;
+    border-radius: 5px; 
+    display:none;
+    animation:fadein 1.1s 1; 
+}  
+ 
+
+@keyframes fadein {
+    from {
+        opacity: 0; /* Start completely transparent */
+    }
+    to {
+        opacity: 1; /* End fully opaque */
+    }
+}
+
+
+
+#cancel-button {
+    background-color: transparent; /* Transparent background */
+    border: none; /* No border */ 
+    border:2px solid white;
+    color: white; /* White text */
+    cursor: pointer; /* Pointer cursor */ 
+    top: 10px; /* Adjust as necessary */
+    right: 10px; /* Adjust as necessary */
+}
+
+        .headerimg {
+            background-color: #008080;
+            color: white;
+        } 
+
+        .order-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+        }
+
+        .track-button {
+    background-color: transparent; 
+    color: #008080;
+    padding: 10px 20px;
+    cursor: not-allowed;
+    transition: opacity 0.3s ease; /* Smooth transition */
+} 
+
+.track-button.active {
+    background-color: #008080;
+    color: white;
+    cursor: pointer;
+}
+
+.track-button:hover { 
+    background-color:#16afaf
+}
+
+/* Ensure the hover effect works for active buttons */
+.track-button.active:hover {
+    opacity: 0.8; /* Slightly different opacity for active buttons */
+}
+ 
+
+.acard{
+         width:100%; 
+         padding-left:20px;
+         padding-right:20px; 
+         padding-top:20px;
+         padding-bottom:20px;
+         border:1px solid #008080;
+     }    
+
+     
+     .gridda {
+  display: grid;
+  grid-row-gap: 40px;
+  grid-column-gap: 40px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 2fr)); /* Use auto-fill */
+  margin: 0 10px;    
+  padding: 0 10px; 
+  box-sizing: border-box; 
+}
+       
+    </style>  
+</head>
+
+<body> 
+    
+    <%- include('../partials/topbar.ejs') %> 
+
+   <!-----ERROR AND SUCCESS NOTIFICATION POP UP -->
+   <%- include('../partials/errnotify.ejs') %>  
+   <%- include('../partials/sucnotify.ejs') %> 
+    
+
+    <!-- Page Header Start -->
+<div class="container-fluid mb-5 headerimg">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color:white">Track Your Orders</h1>
+        <div class="d-inline-flex">
+            <p class="m-0"><a style="color:#fff; font-weight:bold; font-size:18px;" href="/">Home</a></p>
+            <p class="m-0 px-2">-</p>
+            <p style="color:white; font-size:18px;" class="m-0">Track Orders</p>
+        </div>
+    </div>
+</div>
+<!-- Page Header End --> 
+
+
+<div class="text-center mb-4">
+    <h2 class="section-title px-5"><span class="px-2">Your Orders</span></h2>
+</div> 
+
+    <div style="padding-left:15px; padding-right:15px;" class="gridda">
+        
+ 
+            <% orders.forEach(order => { %>    
+                <div class="acard"> 
+            <% let totalPaid = 0; %>
+                    <h5 style="text-align:center">Order Info</h5>  <br>
+        <ul>            
+       <% order.cartDetails.map(item => { %> 
+        <ul>
+        <li>Product name: <b><%=item.productName%></b></li> 
+        <li>Product quantity: <b><%=item.quantity%></b></li> 
+        <li>Product size: <b><%=item.size%></b></li>  
+        <li>Product size: <b><%=item.totalPrice%></b></li>  <br> 
+        </ul>
+    <% }); %>        
+    <li>Shipping fee: <b><%=order.shippingFee%></b></li>   
+    </ul>  
+                    <p>Destination: <%= order.address1 %>, <%= order.address2 %> , <%= order.country %>,  <%= order.city %>, <%= order.state %>, <%= order.zip %></p> 
+                   
+          <% totalPaid += parseFloat(order.shippingFee) %> <!-- Add shipping fee once -->
+
+       <% order.cartDetails.forEach(item => { %>
+        <% totalPaid += parseFloat(item.totalPrice); %> <!-- Add total prices of items -->
+    <% }); %>    
+
+      <p>Total Paid: <b>£<%= totalPaid.toFixed(2) %></b></p>   
+      
+                    <% const isPending = order.trackingCode === 'pending'; %>
+
+<button
+  class="track-button <%= isPending ? '' : 'active' %>"
+  style="<%= isPending ? 'opacity: 0.3;' : 'opacity: 1;' %>"
+  <%= isPending ? 'disabled' : '' %>
+  onclick="trackPackage(event, '<%= order.trackingCode %>')" >
+  Track Package
+</button>    
+
+<p>Your tracking code is <%= !isPending ? order.trackingCode : 'processing...' %></p>
+ 
+                </div>
+            <% }); %>
+       
+    </div>
+
+    <!-- Footer Start -->
+    <%- include('../partials/footer.ejs') %>
+    <!-- Footer End -->
+
+    <script>  
+
+        async function trackPackage(event, trackingCode) {
+            if (trackingCode !== 'pending') {
+                // Implement your tracking functionality here  
+                var trackingcode = trackingCode; 
+                event.target.style.opacity = 0.56;
+                event.target.innerHTML = 'Tracking..';
+                 
+                var allbutton = document.querySelectorAll('button');
+       allbutton.forEach((each)=>{
+         each.disabled = true;
+       });
+
+
+                try{ 
+                 //track the package in this api link
+                  const resp = await fetch(`/tracking_my_package/287b2d2gv67/iniqFasbnxdxnsqv/${trackingcode}`, {
+                          method : 'GET', 
+                  });    
+                  if(!resp.ok){
+                      throw resp;
+                  }  
+                  setTimeout(()=>{  
+                  event.target.style.opacity = 3;
+                event.target.innerHTML = 'Tracked.';
+                event.target.disabled = false;  
+            }, 3000);
+                  const result = await resp.json();   
+
+                  const notification = document.getElementById('error-notification');
+    const errorMessage = document.getElementById('error-message');
+    
+    errorMessage.textContent = result.respp.detail; // Set the error message
+    notification.style.display = 'block'; // Show the notification
+
+    // Automatically hide the notification after 15 seconds
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 15000);     
+
+                } catch(err) { 
+                    event.target.style.opacity = 3;
+                event.target.innerHTML = 'Track Package'; 
+
+                var allbutton = document.querySelectorAll('button');
+       allbutton.forEach((each)=>{
+         each.disabled = false;
+       });
+  
+                     const error = await err.json();   
+
+                     const notification = document.getElementById('error-notification');
+    const errorMessage = document.getElementById('error-message');
+    
+    errorMessage.textContent = error.respp.detail; // Set the error message
+    notification.style.display = 'block'; // Show the notification
+
+    // Automatically hide the notification after 15 seconds
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 15000);  
+                }
+            }
+        }   
+
+
+        document.getElementById('cancel-button').addEventListener('click', () => {
+    document.getElementById('error-notification').style.display = 'none';
+});  
+
+document.getElementById('scancel-button').addEventListener('click', () => {
+    document.getElementById('success-notification').style.display = 'none';
+}); 
+
+    </script>
+
+</body>
+
+</html>

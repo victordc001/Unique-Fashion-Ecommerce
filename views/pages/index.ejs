@@ -1,0 +1,775 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head> 
+    <%- include('../partials/head.ejs') %>  
+    <meta property="og:title" content="Top Quality, Low Prices: Your Ultimate Shopping Destination">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <style> 
+ 
+         .categgg{
+            display:grid;
+                  grid-row-gap:40px;
+                  grid-column-gap:40px;
+                  grid-template-columns:repeat(auto-fit, minmax(150px, 3fr));
+                  min-width:100px;
+                  margin-left:20px;
+                  margin-right:20px;
+                  padding-left:10px;
+                  padding-right:10px; 
+                  margin-top:30px; 
+         }  
+
+         .categgg div{
+      width:100%;
+      background-color:white;
+      height:100px;
+      color:white; 
+      border:none;
+      border-radius:2px;
+      display:flex;
+      justify-content:center;
+      text-align:center;
+      align-items:center;
+      background: linear-gradient(135deg, #003B46 0%, #004d40 40%, #008080 70%, #00bfae 100%);
+      background-repeat:no-repeat;
+      background-position:center;     
+      padding-left:5px;
+      padding-right:5px; 
+      transition:1s; 
+      transform:scale(1.0);
+         } 
+   
+         .categgg div:hover a{ 
+            font-size:16px;
+         }
+ 
+
+    .categgg div a{
+         color:white;
+         text-decoration:none; 
+         font-size:18px;
+         font-weight:bold;
+    }
+         
+
+
+    .image-container {
+    max-width: 800px; /* Limit the maximum width of the container */
+    width: 100%;      /* Make it responsive */
+    margin: 0 auto;   /* Center the image on the page */
+}
+
+.image-container img {
+    display: block;   /* Removes inline gaps (optional) */
+    max-width: 100%;  /* Prevents image overflow */
+    height: auto;     /* Maintains the aspect ratio */
+}
+
+
+
+
+            .griddo{
+                  display:grid;
+                  grid-row-gap:40px;
+                  grid-column-gap:40px;
+                  grid-template-columns:repeat(auto-fit, minmax(200px, 3fr));
+                  min-width:100px;
+                  margin-left:10px;
+                  margin-right:10px;
+                  padding-left:10px;
+                  padding-right:10px;
+            }    
+   
+
+            .orderpercent{
+              margin-top:50px;
+              margin-bottom:25px;
+              min-width:100px;
+              border:none; 
+              padding-bottom:30px;
+              padding-left:15px;
+              padding-right:15px;
+              padding-top:15px; 
+              background-size:cover;
+              background-position:center;
+              text-align:center;  
+              margin-left:20px;
+              margin-right:20px;
+              background-image:linear-gradient(rgba(0,0,0,0.60), rgba(0,0,0,0.60)), url('/img/unf.jpeg');
+            }
+         
+
+              .orderpercent p{
+                font-family:'poppins', sans-serif;
+                font-weight:bold;
+                color:white;
+                font-size:30px;
+                text-align:center; 
+              } 
+
+
+
+
+              .orderpercent button{
+                  width:200px;
+                  background-color:white;
+                  color:black;
+                  border:none;
+                  margin-top:10px;
+              }
+ 
+
+
+                 #hiddenlf{
+                    display:none;  
+                 }   
+ 
+
+             @media only screen and (max-width:600px) { 
+                  #header-carousel{
+                    left:0;
+                    right:0;    
+                    width:100%; 
+                    height:100%; 
+                  } 
+
+                  .okhome{
+                    font-family: 'Orbitron', sans-serif; 
+                    font-style: normal;
+                  }
+             }
+    </style>
+</head>
+
+<body> 
+    
+    <!-- Topbar Start -->
+    <div style="z-index:5; position:fixed; top:0; left:0; right:0; background-color:white;" class="container-fluid"  id="topbar">
+        <div style="background-color:white" class="row py-2 px-xl-5"> 
+            <div class="col-lg-6 text-center text-lg-right">
+                <div class="d-inline-flex align-items-center">
+                    <a style="font-size:20px;" class="text-dark px-2" href="">
+                        <i  class="fab fa-facebook-f"></i>
+                    </a>  
+                    <a  style="font-size:20px" class="text-dark px-2" href="">
+                        <i class="fab fa-instagram"></i>
+                    </a> 
+                </div>
+            </div>
+        </div> 
+    
+    
+        <div class="row align-items-center py-3 px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block">
+                <a href="/" class="text-decoration-none">
+                    <h1 style="font-family: 'Orbitron', sans-serif; font-style: normal; font-size:23px; margin-top:5px" class="m-0 display-5 font-weight-semi-bold">UNIQUE FASHION</h1>
+                </a>
+            </div> 
+    
+            <div class="col-lg-6 col-6 text-left">
+                <form id="searchproduct">
+                    <div class="input-group">  
+                        <input type="text" class="form-control" placeholder="Search for products">
+                        <div class="input-group-append">
+                            <span class="input-group-text bg-transparent text-primary">
+                                <i style="padding-left:4px; padding-right:4px; padding-top:4px; padding-bottom:4px; background-color:#008080; color:#fff" class="fa fa-search"></i>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div> 
+    
+            <div class="col-lg-3 col-6 text-right">
+                <a href="/wishlist" class="btn border">  
+                    <% if(user){ %>  
+                  <i style="color:#008080;" class="fas fa-heart" id="wishl"></i>  
+                  <span class="badge" id="wishlp"><%=mwl%></span>
+                    <% } else { %> 
+                    <i style="color:#008080;" class="fas fa-heart"></i>  
+                    <span class="badge">0</span>
+                     <% } %> 
+                </a>
+                <a href="/carts" class="btn border">   
+                             <% if(user){ %>  
+                        <i style="color:#008080;" class="fas fa-shopping-cart" id="ucart"></i>
+                        <span class="badge" id="cartlp"><%=mct%></span> 
+                          <% } else { %> 
+                            <i style="color:#008080;" class="fas fa-shopping-cart" id="ucart"></i>
+                            <span class="badge">0</span> 
+                           <% } %>  
+                  </a>
+            </div>
+        </div>
+    </div>    
+    <!-- Topbar End --> 
+
+            <!-----ERROR AND SUCCESS NOTIFICATION POP UP -->
+            <%- include('../partials/errnotify.ejs') %>  
+            <%- include('../partials/sucnotify.ejs') %>  
+
+
+    <!-- Navbar Start -->
+    <div style="margin-top:120px" class="container-fluid mb-5">
+        <div class="row border-top px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block">
+                <a class="btn shadow-none d-flex align-items-center justify-content-between text-white w-100" data-toggle="collapse" href="#navbar-vertical" style="height: 65px; margin-top: -1px; padding: 0 30px; background-color:#008080">
+                    <h6 style="color:#fff" class="m-0">Categories</h6>
+                    <i class="fa fa-angle-down text-white"></i>
+                </a>
+
+                <nav class="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0" id="navbar-vertical">
+                    <div class="navbar-nav w-100 overflow-hidden" style="height: 410px"> 
+                        <a href="/collections/maledresses" class="nav-item nav-link">Men's Dresses</a>
+                        <a href="/collections/femaledresses" class="nav-item nav-link">Women's Dresses</a>
+                        <a href="/collections/kidwears" class="nav-item nav-link">Baby's Dresses</a> 
+                        <a href="/collections/shoes" class="nav-item nav-link">Shoes</a>
+                    </div>
+                </nav>
+            </div>
+            <div class="col-lg-9">
+                <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
+                    <a href="/products" class="text-decoration-none d-block d-lg-none">
+                        <h1 style="font-family: 'Orbitron', sans-serif; font-style: normal; font-size:23px; margin-top:5px" class="m-0 display-5 font-weight-semi-bold">UNIQUE FASHION</h1>
+                    </a>
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                        <div class="navbar-nav mr-auto py-0">
+                            <a href="/" class="nav-item nav-link active">Home</a>
+                            <a href="/products" class="nav-item nav-link">Shop</a> 
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
+                                <div class="dropdown-menu rounded-0 m-0">
+                                    <a href="/carts" class="dropdown-item">Shopping Cart</a>
+                                    <a href="/wishlist" class="dropdown-item">Wishlist</a>
+                                </div>
+                            </div>
+                            <a href="/contact" class="nav-item nav-link">Contact</a>
+                        </div>
+                        <div class="navbar-nav ml-auto py-0"> 
+                            <% if(user && user.role == 'admin') { %> 
+                                <a href="/admin-control-product" class="nav-item nav-link">UploadProduct</a> 
+                                <a href="/dashboard" class="nav-item nav-link">Dashboard</a>
+                           <% } else if(user) { %> 
+                            <a href="/dashboard" class="nav-item nav-link">Dashboard</a>
+                           <% } else { %> 
+                                <a href="/login" class="nav-item nav-link">Login</a>
+                                <a href="/signup" class="nav-item nav-link">Register</a>
+                            <% } %>
+                        </div>
+                    </div>
+                </nav>
+                <div id="header-carousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active" style="height: 410px;"> 
+                            <img src="/img/unf.jpeg">
+                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                <div class="p-3" style="max-width: 700px;">
+                                    <br><br>  <br><br>  <br><br>   <a href="/products" style="background-color:#fff; color:black" class="btn py-2 px-3">Shop Now</a>
+                                </div>
+                            </div>
+                        </div>    
+                        <div class="carousel-item" style="height: 410px;">   
+                            <img src="/img/unh.jpeg">
+                            <div class="carousel-caption ubgb d-flex flex-column align-items-center justify-content-center">
+                                <div class="p-3" style="max-width: 700px;">
+                                    <br><br>  <br><br>   <br><br>  <a href="/products" style="background-color:#f3f3f3; color:black" class="btn py-2 px-3">Shop Now</a>
+                                </div>
+                            </div>
+                        </div>      
+                        <div class="carousel-item" style="height: 410px;">   
+                            <img src="/img/unb.jpg">
+                            <div class="carousel-caption ubgb d-flex flex-column align-items-center justify-content-center">
+                                <div class="p-3" style="max-width: 700px;">
+                                    <br><br>  <br><br>   <br><br>  <a href="/products" style="background-color:#f3f3f3; color:black" class="btn py-2 px-3">Shop Now</a>
+                                </div>
+                            </div>
+                        </div>  
+                        <div class="carousel-item" style="height: 410px;">   
+                            <img src="/img/una.jpg">
+                            <div class="carousel-caption ubgb d-flex flex-column align-items-center justify-content-center">
+                                <div class="p-3" style="max-width: 700px;">
+                                    <br><br>  <br><br>   <br><br>  <a href="/products" style="background-color:#f3f3f3; color:black" class="btn py-2 px-3">Shop Now</a>
+                                </div>
+                            </div>
+                        </div> 
+                        
+                    </div>
+                    <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
+                        <div class="btn btn-dark" style="width: 45px; height: 45px;">
+                            <span class="carousel-control-prev-icon mb-n2"></span>
+                        </div>
+                    </a>
+                    <a class="carousel-control-next" href="#header-carousel" data-slide="next">
+                        <div class="btn btn-dark" style="width: 45px; height: 45px;">
+                            <span class="carousel-control-next-icon mb-n2"></span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Navbar End --> 
+
+
+
+    <!--Hide a login form here initially for non authenticated users-->
+
+     <div id="hiddenlf">  
+         <%- include('../partials/loginfirst.ejs') %>
+     </div>
+
+
+    <!-- Featured Start -->
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5 pb-3">
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 style="color:#008080; background-color:#fff; padding: 4px 4px" class="fa fa-check m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Quality Product</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 style="color:#008080; background-color:#fff; padding: 4px 4px"  class="fas fa-shield-alt"> </h1>
+                    <h5 class="font-weight-semi-bold m-0"> Swift Shipping</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 style="color:#008080; background-color:#fff; margin-right:8px; padding: 4px 4px" class="fas fa-rocket"> </h1>
+                    <h5 class="font-weight-semi-bold m-0"> Secured Transaction</h5>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 style="color:#008080; background-color:#fff; padding: 4px 4px" class="fa fa-phone-volume m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">24/7 Support</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Featured End -->
+       
+      
+    <div class="categgg">
+        <div data-aos="fade-left" data-aos-duration="1500"><a href="/collections/maledresses">Male Dresses</a></div>
+        <div data-aos="fade-up" data-aos-delay="200" data-aos-duration="1500"><a href="/collections/femaledresses">Female Dresses</a></div>
+        <div data-aos="fade-bottom" data-aos-delay="200" data-aos-duration="1600"><a href="/collections/shoes">Shoes</a></div>
+        <div data-aos="fade-right" data-aos-delay="200" data-aos-duration="1700"><a href="/collections/kidwears">Kidwears</a></div>
+    </div>   
+    <br><br>   <br><br>
+
+    <div class="text-center mb-4">
+        <h2 class="section-title px-5"><span class="px-2">Trendy Products</span></h2>
+    </div>  
+    <br>
+
+    <!-- Products Start --> 
+     <% if(products && products.length > 0) { %> 
+    <div class="griddo"> 
+        <% products.forEach(each=>{ %> 
+        <div class="card product-item border-0">
+            <div style="height:240px" class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+            <!--Calculate a random index based on the length of the productImage array-->
+               <% const randomIndex = Math.floor(Math.random() * each.productImage.length); %>
+               <% const randomImage = each.productImage[randomIndex]; %>
+               
+               <div class="image-container">
+                <img style="object-fit: contain;" class="img-fluid" src="<%=`/${randomImage.path}`%>" alt="Product Image">
+            </div>
+            
+        </div>
+            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                <h6 class="text-truncate mb-3"><%=each.productName%></h6>
+                <div style="border:1px dotted black; padding-top:5px; margin-left:10px; margin-right:10px" class="d-flex justify-content-center">
+                    <h6><%=each.priceuk%></h6>
+                </div>
+            </div>
+            <div style="background-color:#008080;" class="card-footer d-flex justify-content-between border">
+                <a href="/collections/<%=each.category%>/<%=each.productName%>/<%=each._id%>" style="color:#fff" class="btn-sm p-0"><i style="color:#fff" class="fas fa-eye mr-1"></i>View Detail</a>
+                <% if(user) { %>  
+                    <i class="fa fa-heart wishlisticonforauthenticated" productId = '<%=each._id%>' style="color:white; cursor:pointer; border-radius:50px; font-size:20px"></i>
+                 <% } else { %>  
+                   <i class="fa fa-heart ordinarywishlisticon" style="color:white; cursor:pointer; border-radius:50px; font-size:20px"></i>
+                  <% } %>
+                  <button style="color:#fff; background:none; border:none" productId = '<%=each._id%>' class="btn-sm p-0 atc"><i style="color:#fff" class="fas fa-shopping-cart mr-1"></i>Add To Cart</button>
+                </div>  
+            <% if(user && user.role == 'admin'){ %> 
+            <div style="background-color:#008080;" class="card-footer d-flex justify-content-between border">
+                <a href="/admin-control/collections/<%=each.productName%>/<%=each._id%>" style="color:#fff" class="btn-sm p-0"><i style="color:#fff" class="fas fa-eye mr-1"></i>Edit Product</a>
+                <a href="/" style="color:#fff" productId = '<%=each._id%>' class="delprod btn-sm p-0"><i style="color:#fff" class="fas fa-shopping-cart mr-1"></i>Delete Product</a>
+            </div>  
+        <% } %>
+        </div>   
+    <% }); %>
+        </div> 
+     <% } else { %>
+     <p style="text-align:center; font-size:'Poppins', sans-serif; margin-left:15px; margin-right:15px;">No Trendy Products yet , please stay tuned as they arrive</p>
+     <% } %> 
+     
+    <!-- Products End --> 
+    
+   <br> 
+    <!-- Subscribe Start -->
+    <div class="container-fluid my-5" data-aos="fade-down"
+    data-aos-easing="linear"
+    data-aos-duration="1000" style="background: linear-gradient(135deg, #003B46 0%, #004d40 40%, #008080 70%, #00bfae 100%);">
+        <div class="row justify-content-md-center py-5 px-xl-5">
+            <div class="col-md-6 col-12 py-5">
+                <div class="text-center mb-2 pb-2">
+                    <h2 class="px-5 text-uppercase mb-3"><span style="font-weight:bold; background:none; color:#fff" class="px-2">Stay Updated</span></h2>
+                    <p style="color:white">Stay ahead of the trends with our exclusive Fashion Feed! Be the first to discover the latest styles, special offers, and insider tips delivered straight to your inbox. Join our style-savvy community today and never miss out on the fashion buzz!.</p>
+                </div>
+                <form id="subscba">
+                    <div class="input-group">
+                        <input type="email" id="subsemaila" class="form-control border-white p-4" placeholder="Email Goes Here" required>
+                        <div class="input-group-append">
+                            <button id="btnsubsa" style="background-color:#008080; color:white" class="btn px-4">Subscribe</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>   <br>
+    <!-- Subscribe End -->
+
+    <div class="text-center mb-4">
+        <h2 class="section-title px-5"><span class="px-2">Just Arrived</span></h2>
+    </div>
+
+    <!-- Products Start --> 
+        <% if(justarrived && justarrived.length > 0) { %> 
+    <div class="griddo"> 
+        <% justarrived.forEach(each=>{ %> 
+        <div class="card product-item border-0">
+            <div style="height:240px" class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+            <!--Calculate a random index based on the length of the productImage array-->
+               <% const randomIndex = Math.floor(Math.random() * each.productImage.length); %>
+               <% const randomImage = each.productImage[randomIndex]; %>
+               <div class="image-container">
+                <img style="object-fit: contain;" class="img-fluid" src="<%=`/${randomImage.path}`%>" alt="Product Image">
+              </div>
+
+            </div>
+            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                <h6 class="text-truncate mb-3"><%=each.productName%></h6>
+                <div style="border:1px dotted black; padding-top:5px; margin-left:10px; margin-right:10px" class="d-flex justify-content-center">
+                    <h6><%=each.priceuk%></h6>
+                </div>
+            </div>
+            <div style="background-color:#008080;" class="card-footer d-flex justify-content-between border">
+                 <a href="/collections/<%=each.category%>/<%=each.productName%>/<%=each._id%>" style="color:#fff" class="btn-sm p-0"><i style="color:#fff" class="fas fa-eye mr-1"></i>View Detail</a>
+                <% if(user) { %>  
+                    <i class="fa fa-heart wishlisticonforauthenticated" productId = '<%=each._id%>'style="color:white; cursor:pointer; border-radius:50px; font-size:20px"></i>
+                 <% } else { %>  
+                   <i class="fa fa-heart ordinarywishlisticon" style="color:white; cursor:pointer; border-radius:50px; font-size:20px"></i>
+                  <% } %>
+                  <button style="color:#fff; background:none; border:none" productId = '<%=each._id%>' class="btn-sm p-0 atc"><i style="color:#fff" class="fas fa-shopping-cart mr-1"></i>Add To Cart</button>
+            </div>  
+             <% if(user && user.role == 'admin'){ %> 
+            <div style="background-color:#008080;" class="card-footer d-flex justify-content-between border">
+                <a href="collections/<%=each.productName%>/<%=each._id%>" style="color:#fff" class="btn-sm p-0"><i style="color:#fff" class="fas fa-eye mr-1"></i>Edit Product</a>
+                <a href="/" style="color:#fff" productId = '<%=each._id%>' class="delprod btn-sm p-0"><i style="color:#fff" class="fas fa-shopping-cart mr-1"></i>Delete Product</a>
+            </div>  
+        <% } %>
+        </div>   
+    <% }); %>
+        </div>    
+    <% } else { %>
+        <p style="text-align:center; font-size:'Poppins', sans-serif; margin-left:15px; margin-right:15px;">No Just Arrived Products yet , please stay tuned as they arrive</p>
+        <% } %> 
+    <!-- Products End -->
+     
+
+    <div class="orderpercent">
+        <p>10% OFF FIRST ORDER FOR VALENTINE CELEBRATION</p>
+        <button onclick="enj()">ENJOY DISCOUNT!</button>
+     </div>
+
+    
+    <!-- Footer Start -->
+    <%- include('../partials/footer.ejs') %> 
+    <!-- Footer End -->  
+
+
+     
+
+    <script>
+            var subscba = document.getElementById('subscba');
+      subscba.addEventListener('submit', async (s)=>{
+            s.preventDefault(); 
+            var demaila = document.getElementById('subsemaila');  
+            var btnsuba = document.getElementById('btnsubsa');   
+            btnsuba.innerHTML = 'Subscribing..'; 
+            btnsuba.style.opacity = '0.2';
+            btnsuba.disabled = true;  
+
+            const dat = { 
+                 email : demaila.value,
+            }
+ 
+                try{
+            const resp = await fetch('/subsbg', {
+                 method : 'post',
+                 headers : {
+                     'Content-Type' : 'application/json',
+                     Accept : 'application/json',
+                 },
+                 body : JSON.stringify(dat),
+            });  
+
+            if(!resp.ok) {
+                  throw resp;
+            }    
+
+            btnsuba.innerHTML = 'Subscribed'; 
+            btnsuba.style.opacity = '2';
+            btnsuba.disabled = false; 
+             
+             //Display success message  
+  const snotification = document.getElementById('success-notification');
+    const successMessage = document.getElementById('success-message');
+    
+    successMessage.textContent = 'Thanks for subscribing to our newsletter'; 
+    snotification.style.display = 'block'; // Show the notification
+
+    // Automatically hide the notification after 7 seconds
+    setTimeout(() => {
+        snotification.style.display = 'none';
+    }, 7000); 
+           
+            demaila.value = '';
+
+     }  catch(err) {
+            btnsuba.innerHTML = 'Subscribe'; 
+            btnsuba.style.opacity = '2';
+            btnsuba.disabled = false; 
+            const error = await err.text();
+            alert(error);
+     }
+      });  
+
+
+
+       
+          var delprod = document.querySelectorAll('.delprod'); 
+          for(i = 0; i<delprod.length; i++) {  
+          delprod[i].addEventListener('click', async (a)=>{
+             a.preventDefault(); 
+             var conf = confirm('Are you sure you want to delete this product?');
+             if(conf){   
+                var productid = a.target.getAttribute('productId');  
+                try{
+                 const deleted = await fetch(`/deletingprod/${productid}`, {
+                     method : 'delete',
+                 });   
+                 if(!deleted.ok){
+                     throw deleted;
+                 }
+                 alert('Product deleted successfully'); 
+                 location.reload();
+                }  catch(err) {
+                      var error = await err.text(); 
+                      alert(error);  
+                }
+             }  else {
+                  return;
+             }
+          }); 
+        }  
+
+ 
+
+           // function enj() {
+               //  window.location.href = '/products';
+          //  }    
+     
+  
+            //Wishlist adding for NONauthenticated users
+            var nonwlic = document.querySelectorAll('.ordinarywishlisticon'); 
+            nonwlic.forEach((each)=>{
+                each.onclick = ()=>{ 
+                      var loginform = document.getElementById('hiddenlf');
+                      loginform.style.display = 'block';
+                }  
+            });
+
+            //Wishlist adding for authenticated users
+            var wlic = document.querySelectorAll('.wishlisticonforauthenticated'); 
+            wlic.forEach((each)=>{  
+                each.addEventListener('click', async (e)=>{
+              e.preventDefault(); 
+             var elemId = each.getAttribute('productId');  
+            
+             var dat = {
+                 prodId : elemId,
+             } 
+
+             try{
+          const result = await fetch('/addwishlist', {
+                   method : 'post',
+                   body : JSON.stringify(dat),
+                   headers : {
+                      'Content-Type' : 'application/json',
+                      Accept : 'application/json',
+                   },
+          });  
+          if(!result.ok) {
+             throw result; 
+          }   
+          
+          //response from backend
+         const resp = await result.json(); 
+         const lengthh = resp.mwl;
+         
+  //get the wishlist icon and span with topbar for quick display to the user that wishlist added  
+  var wi = document.getElementById('wishl');
+  var wip = document.getElementById('wishlp'); 
+  var tp = document.getElementById('topbar');  
+ 
+  wip.innerHTML = lengthh;   
+
+
+   //Display success message  
+   const snotification = document.getElementById('success-notification');
+    const successMessage = document.getElementById('success-message');
+    
+    successMessage.textContent = 'Wishlist added successfully, view full details in dashboard';  
+    snotification.style.display = 'block'; // Show the notification
+
+    // Automatically hide the notification after 7 seconds
+    setTimeout(() => {
+        snotification.style.display = 'none';
+    }, 7000); 
+    
+
+        } catch(err) {
+             const error = await err.text();
+             const notification = document.getElementById('error-notification');
+    const errorMessage = document.getElementById('error-message');
+    
+    errorMessage.textContent = error; // Set the error message
+    notification.style.display = 'block'; // Show the notification
+
+    // Automatically hide the notification after 15 seconds
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 7000); 
+             return;
+        }
+            }); 
+            });      
+
+
+
+
+            //Add to cart action for users 
+            //cart adding for authenticated users
+            var atc = document.querySelectorAll('.atc'); 
+            atc.forEach((each)=>{  
+                each.addEventListener('click', async (e)=>{ 
+             var elemId = each.getAttribute('productId');   
+             var dat = {
+                 prodId : elemId,
+             } 
+
+             try{
+          const result = await fetch('/addingtocart', {
+                   method : 'post',
+                   body : JSON.stringify(dat),
+                   headers : {
+                      'Content-Type' : 'application/json',
+                      Accept : 'application/json',
+                   },
+          });  
+          if(!result.ok) {
+             throw result; 
+          }   
+          
+          //response from backend
+         const resp = await result.json(); 
+         const lengthh = resp.mwl;
+         
+  //get the wishlist icon and span with topbar for quick display to the user that wishlist added  
+  var wi = document.getElementById('ucart');
+  var wip = document.getElementById('cartlp'); 
+  var tp = document.getElementById('topbar');  
+ 
+  wip.innerHTML = lengthh;   
+
+  //Display success message  
+  const snotification = document.getElementById('success-notification');
+    const successMessage = document.getElementById('success-message');
+    
+    successMessage.textContent = 'Cart added successfully, view full details in dashboard'; 
+    snotification.style.display = 'block'; // Show the notification
+
+    // Automatically hide the notification after 7 seconds
+    setTimeout(() => {
+        snotification.style.display = 'none';
+    }, 7000); 
+ 
+
+        } catch(err) {
+             const error = await err.text();
+             if(error.trim() == 'This action is only for authenticated users'.trim()) {
+                var loginform = document.getElementById('hiddenlf');
+                loginform.style.display = 'block';
+             } else {
+                const notification = document.getElementById('error-notification');
+    const errorMessage = document.getElementById('error-message');
+    
+    errorMessage.textContent = error; // Set the error message
+    notification.style.display = 'block'; // Show the notification
+
+    // Automatically hide the notification after 15 seconds
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 7000); 
+             }
+             return;
+        }
+            }); 
+            });
+            
+
+       
+            document.getElementById('cancel-button').addEventListener('click', () => {
+    document.getElementById('error-notification').style.display = 'none';
+});  
+
+document.getElementById('scancel-button').addEventListener('click', () => {
+    document.getElementById('success-notification').style.display = 'none';
+}); 
+
+    </script>
+
+ 
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="mail/jqBootstrapValidation.min.js"></script>
+    <script src="mail/contact.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/aos@next/dist/aos.js"></script> 
+
+    <script>
+           // Initialize AOS
+          AOS.init();
+    </script>
+  
+
+</body>
+
+</html>

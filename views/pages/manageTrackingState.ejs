@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Manage Tracking States</title>
+    <%- include('../partials/head.ejs') %>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e0f7f7;
+        }
+
+        .page-title {
+            color: #008080;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .page-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #008080, #20b2aa);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .orders-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e0f7f7;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .order-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 128, 128, 0.15);
+            border-color: #008080;
+        }
+
+        .order-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #008080, #20b2aa);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .order-id {
+            color: #008080;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .order-status {
+            background: linear-gradient(135deg, #ff9800, #ff5722);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .order-details {
+            margin-bottom: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #666;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .detail-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .tracking-code {
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            border: 1px solid #e0e0e0;
+        }
+
+        .update-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px dashed #008080;
+            margin-top: 20px;
+        }
+
+        .update-title {
+            color: #008080;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            transition: border-color 0.3s ease;
+            background: white;
+        }
+
+        .status-select:focus {
+            outline: none;
+            border-color: #008080;
+            box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.1);
+        }
+
+        .update-button {
+            background: linear-gradient(135deg, #008080, #20b2aa);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .update-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 128, 128, 0.3);
+        }
+
+        .update-button:active {
+            transform: translateY(0);
+        }
+
+        .update-button.loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .no-orders {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e0f7f7;
+        }
+
+        .no-orders-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .no-orders-title {
+            color: #008080;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .no-orders-text {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .success-message, .error-message {
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 0 15px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .orders-container {
+                grid-template-columns: 1fr;
+            }
+
+            .order-card {
+                padding: 20px;
+            }
+
+            .stats-container {
+                gap: 15px;
+            }
+
+            .stat-card {
+                min-width: 120px;
+                padding: 12px 20px;
+            }
+
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                padding: 20px;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .order-card {
+                padding: 15px;
+            }
+
+            .stats-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Loading Animation */
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <%- include('../partials/topbar.ejs') %>
+    
+    <div class="main-container">
+        <div class="page-header">
+            <h1 class="page-title">📦 Manage Tracking States</h1>
+            <p class="page-subtitle">Update order statuses for packages currently in transit</p>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <span class="stat-number"><%= orders ? orders.length : 0 %></span>
+                    <span class="stat-label">Orders in Transit</span>
+                </div> 
+            </div>
+        </div>
+ 
+        <div class="orders-container">
+            <% if (orders && orders.length > 0) { %>
+                <% orders.forEach((order, index) => { %>
+                    <div class="order-card" data-order-id="<%= order._id %>">
+                        <div class="order-header">
+                            <div class="order-id">Order #<%= order._id %></div>
+                            <div class="order-status">
+                                🚚 In Transit
+                            </div>
+                        </div>
+
+                        <div class="order-details"> 
+                            <div class="detail-row">
+                                <span class="detail-label">Tracking Code:</span>
+                                <span class="detail-value">
+                                    <div class="tracking-code"><%= order.trackingCode %></div>
+                                </span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Order Date:</span>
+                                <span class="detail-value">
+                                    <%= order.dateAdded ? new Date(order.createdAt).toLocaleDateString() : 'N/A' %>
+                                </span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Payment Status:</span>
+                                <span class="detail-value">✅ <%= order.paymentStatus %></span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Current State:</span>
+                                <span class="detail-value">🚚 <%= order.trackingState %></span>
+                            </div>
+                        </div>
+
+                        <div class="update-section">
+                            <div class="success-message" id="success-<%= index %>"></div>
+                            <div class="error-message" id="error-<%= index %>"></div>
+                            
+                            <div class="update-title">
+                                ⚡ Update Tracking Status
+                            </div>
+                            
+                            <select class="status-select" id="status-<%= index %>">
+                                <option value="">Select new status...</option>
+                                <option value="inTransit">🚚 In Transit</option>
+                                <option value="delivered">✅ Delivered</option>
+                            </select>
+                            
+                            <button 
+                                class="update-button" 
+                                onclick="updateTrackingState('<%= order._id %>', '<%= order.trackingCode %>', <%= index %>)"
+                                id="btn-<%= index %>"
+                            >
+                                <span id="btn-text-<%= index %>">🔄 Update Status</span>
+                            </button>
+                        </div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="no-orders">
+                    <div class="no-orders-icon">📭</div>
+                    <div class="no-orders-title">No Orders in Transit</div>
+                    <div class="no-orders-text">All orders are either delivered or not yet shipped.</div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <%- include('../partials/footer.ejs') %>
+
+    <script>
+        // Function to update tracking state (you'll implement the fetch logic)
+        function updateTrackingState(orderId, trackingCode, index) {
+            const statusSelect = document.getElementById(`status-${index}`);
+            const updateButton = document.getElementById(`btn-${index}`);
+            const buttonText = document.getElementById(`btn-text-${index}`);
+            const successMessage = document.getElementById(`success-${index}`);
+            const errorMessage = document.getElementById(`error-${index}`);
+            
+            const newStatus = statusSelect.value;
+            
+            // Hide previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            if (!newStatus) {
+                errorMessage.textContent = 'Please select a status to update.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Show loading state
+            updateButton.classList.add('loading');
+            buttonText.innerHTML = '<div class="loading-spinner"></div> Updating...';
+            updateButton.disabled = true;
+             
+            fetch('/manageorders/update-tracking-state', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    orderId: orderId,
+                    trackingCode: trackingCode,
+                    newStatus: newStatus
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    successMessage.textContent = `Status updated to "${newStatus}" successfully!`;
+                    successMessage.style.display = 'block';
+                    
+                    // Update the visual status
+                    const orderCard = document.querySelector(`[data-order-id="${orderId}"]`);
+                    const statusElement = orderCard.querySelector('.order-status');
+                    if (newStatus === 'delivered') {
+                        statusElement.innerHTML = '✅ Delivered';
+                        statusElement.style.background = 'linear-gradient(135deg, #4caf50, #8bc34a)';
+                    }
+                } else {
+                    errorMessage.textContent = data.message || 'Failed to update status.';
+                    errorMessage.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                errorMessage.textContent = 'Network error. Please try again.';
+                errorMessage.style.display = 'block';
+            })
+            .finally(() => {
+                // Reset button state
+                updateButton.classList.remove('loading');
+                buttonText.innerHTML = '🔄 Update Status';
+                updateButton.disabled = false;
+            });
+             
+        }
+
+        // Auto-hide messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = document.querySelectorAll('.success-message, .error-message');
+            messages.forEach(message => {
+                if (message.style.display === 'block') {
+                    setTimeout(() => {
+                        message.style.display = 'none';
+                    }, 5000);
+                }
+            });
+        });
+
+        // Add smooth scroll to top functionality
+        window.addEventListener('scroll', function() {
+            const scrollButton = document.getElementById('scrollToTop');
+            if (window.pageYOffset > 300) {
+                if (scrollButton) scrollButton.style.display = 'block';
+            } else {
+                if (scrollButton) scrollButton.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

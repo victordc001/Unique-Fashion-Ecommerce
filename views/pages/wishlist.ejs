@@ -1,0 +1,173 @@
+ 
+ <!DOCTYPE html>
+ <html lang="en">
+ 
+ <head>
+     <%- include('../partials/head.ejs') %> 
+     <meta property="og:title" content="Your Wishlist: Save Favorites for Future Shopping">
+
+     <style> 
+         .wishlist-item {
+             border: 1px solid #ddd;
+             border-radius: 5px;
+             padding: 15px;
+             margin-bottom: 15px; 
+             width:100%;
+         }
+ 
+         .wishlist-item button {
+             background-color: #008080;
+             color: white;
+             border: none;
+             padding: 10px 15px;
+             border-radius: 5px;
+             cursor: pointer;
+         }
+ 
+         .wishlist-item button:hover {
+             background-color: #005757;
+         }
+ 
+         .wishlist-item .delete-btnn { 
+             top: 10px;
+             right: 10px;
+             background-color: red;
+         }
+ 
+         
+         .griddo{
+                  display:grid;
+                  grid-row-gap:40px;
+                  grid-column-gap:40px;
+                  grid-template-columns:repeat(auto-fit, minmax(200px, 3fr));
+                  min-width:100px;
+                  margin-left:10px;
+                  margin-right:10px;  
+            }  
+
+     </style>
+ </head>
+ 
+ <body>
+    
+     <%- include('../partials/topbar.ejs') %>
+ 
+     <!-- Page Header Start -->
+     <div class="container-fluid mb-5 headerimg">
+         <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+             <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color:white">Your Wishlist</h1>
+             <div class="d-inline-flex">
+                 <p class="m-0"><a style="color:#fff; font-weight:bold; font-size:18px;" href="/">Home</a></p>
+                 <p class="m-0 px-2">-</p>
+                 <p style="color:white; font-size:18px;" class="m-0">Wishlist</p>
+             </div>
+         </div>
+     </div>
+     <!-- Page Header End -->
+ 
+     <!-- Wishlist Start -->
+     <div class="container-fluid pt-5">
+         <div class="text-center mb-4">
+             <h2 class="section-title px-5"><span class="px-2">Your Wishlist</span></h2>
+         </div> 
+
+             <% if (wli.length > 0) { %> 
+                <div class="griddo">
+                 <% wli.forEach(item => { %>   
+                        <div class="wishlist-item">
+                             <h5 class="font-weight-semi-bold mb-3"><%= item.product.productName %></h5>
+                             <p><%= item.product.productDescription %></p>
+                             <p><strong>Quantity:</strong> <%= item.quantity %></p>
+                             <p><strong>Size:</strong> <%= item.size %></p>
+                             <p><strong>Price:</strong> <%= item.totalprice %></p>
+                             <p><strong>Total Price:</strong> <%= parseFloat(item.totalprice) * item.quantity %>.00£</p> 
+                             <button style="margin-bottom:7px;" class="add-to-cartt" qua="<%=item.quantity%>" siz="<%=item.size%>" pri="<%=item.totalprice%>" data-id="<%= item.product._id %>">Add to Cart</button>
+                           <button class="delete-btnn" data-id="<%= item._id %>">Remove</button>
+                         </div> 
+                 <% }); %> 
+         </div>
+             <% } else { %>
+                 <div class="col-lg-12">
+                     <p class="text-center">Your wishlist is empty.</p>
+                 </div>
+             <% } %>
+         </div> 
+     <!-- Wishlist End -->
+ 
+     <!-- Footer Start -->
+     <%- include('../partials/footer.ejs') %>
+     <!-- Footer End -->
+ 
+     <script>
+         document.addEventListener('DOMContentLoaded', () => {
+             document.querySelectorAll('.add-to-cartt').forEach(button => {
+                 button.addEventListener('click', async (e) => {  
+ 
+                    var quantity, price, size; 
+                    quantity = e.target.getAttribute('qua');  
+                    price = e.target.getAttribute('pri');
+                    size = e.target.getAttribute('siz');  
+                   
+                   //get the product id
+                     const id = e.target.getAttribute('data-id');
+                     try {
+                         const resp = await fetch('/addacartfromwishlist', {
+                             method: 'POST', 
+                             body : JSON.stringify({
+                                  prodId : id,
+                                  quantity : quantity,
+                                  size : size ,
+                                  price : price,
+                             }),
+                             headers: {
+                                 'Content-Type': 'application/json',
+                                 Accept: 'application/json'
+                             }
+                         });
+ 
+                         if (resp.ok) {
+                             alert('Item added to cart successfully!');
+                             location.reload();
+                         } else {
+                             throw resp;
+                         }
+                     } catch (err) {
+                        const error = await err.text();
+                        alert(error);
+                     }
+                 });
+             });
+   
+
+
+             document.querySelectorAll('.delete-btnn').forEach(button => {
+                 button.addEventListener('click', async (e) => {
+                     const id = e.target.getAttribute('data-id'); 
+                     const confirmed = confirm('Are you sure you want to perform this action?');
+                     if(!confirmed){return}  
+                     try {
+                         const resp = await fetch(`/delete-wishlist-item/${id}`, {
+                             method: 'DELETE',
+                             headers: {
+                                 'Content-Type': 'application/json',
+                                 Accept: 'application/json'
+                             }
+                         });
+ 
+                         if (resp.ok) {
+                             alert('Item removed from wishlist.');
+                             location.reload();
+                         } else {
+                             throw new Error('Failed to delete item');
+                         }
+                     } catch (err) {
+                         alert('An error occurred, please try again.');
+                     }
+                 });
+             });
+         });
+     </script>
+ </body>
+ 
+ </html>
+ 

@@ -1,0 +1,481 @@
+ 
+
+   
+  <!DOCTYPE html>
+  <html>
+      <head> 
+           <%- include('../partials/head.ejs') %>  
+           <link href="https://fonts.googleapis.com/css2?family=Dhurjati:wght@400;700&display=swap" rel="stylesheet">
+           <meta property="og:title" content="Edit Product: Update Your Item Details">
+
+           <title> Edit a product </title>
+     <style>  
+
+      /* Full-page overlay */
+      .overlay {
+                    position: fixed;
+                    padding-top:50px;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 1000; /* Ensure it's on top of other elements */
+                    animation: fadeIn 0.5s ease-in-out; /* Fade-in effect */
+                }
+        
+                /* Overlay content */
+                .overlay-content {
+                    text-align: center;
+                    color: white;
+                    font-size: 24px;
+                    font-family: 'Arial', sans-serif;
+                }
+        
+                /* Icon animation */
+                .spinner {
+                    display: inline-block;
+                    border: 4px solid rgba(255, 255, 255, 0.3); /* Light border */
+                    border-radius: 50%;
+                    border-top: 4px solid white; /* White border on top */
+                    width: 40px;
+                    height: 40px;
+                    animation: spin 1s linear infinite;
+                    margin-bottom: 10px; /* Space between spinner and text */
+                }
+        
+                /* Spinner animation */
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+        
+                /* Fade-in animation */
+                @keyframes fadeIn {
+                    0% { opacity: 0; }
+                    100% { opacity: 1; }
+                } 
+                
+
+            
+
+            .prodimgs{
+                width:100%;
+                margin-left:20px;
+                margin-right:20px;
+                padding-left:5px;
+                padding-right:5px;
+                display:grid;
+                grid-row-gap:20px;
+                grid-column-gap:20px;
+                grid-template-columns:repeat(auto-fit, minmax(150px, 3fr)); 
+                margin-top:25px;
+                margin-bottom:25px;
+            }
+
+            .thisprodimg {
+                 width:100%;
+                 height:100%;
+            }   
+
+            .thisprodimgdiv{
+                height:300px;
+                object-fit:cover;
+                position:relative; 
+            }  
+
+            .thisprodimgdiv i{
+               color:red;
+               font-size:25px;
+               position:absolute;  
+               margin-left:5px;
+               margin-top:5px;
+            } 
+
+            .thisprodimgdiv i:hover{
+                opacity : 0.675;
+            }
+
+
+             
+	.postcontent{
+		background-color:white; 
+		margin-left:20px;
+		min-width:100px; 
+		margin-right:20px;  
+	   animation-name:bganimateb;
+	  animation-duration:0.9s;
+	   animation-iteration-count:1;
+		margin-top:20px;
+		text-align:center;
+		  padding-left:40px;
+		  padding-right:40px;
+		  padding-top:40px; 
+		  padding-bottom:40px; 
+		}   
+
+        .postcontent input{
+			width:85%;
+			background-color:white;
+			border:1px solid grey;  
+			margin-top:10px;
+			padding:15px;
+		 }   
+
+		   .postcontent input::placeholder{
+			color:grey;
+			font-size:13px;
+			letter-spacing:1px;
+			font-weight:bold;
+			font-family: "Poppins", sans-serif;
+	   }  
+
+	   .postbut{ 
+		background-color:#008080;
+		  color: #fff;
+		font-weight:bold;  
+		letter-spacing:1px;
+		font-size:17px;
+		width:70%;
+		border-radius:10px;
+		margin-top:20px;
+		border-radius:5px;
+		border:none;
+		padding:13px;
+	 }  
+
+	 .postcontent textarea{
+		background-color:lightgrey;
+		color:black;
+		width:85%;
+		border-radius:5px;
+		padding-top:12px;
+		padding-bottom:12px;
+		padding-left:10px;
+		padding-right:10px;
+		border:none;
+		height:200px;
+		margin-top:10px;
+
+	 }  
+
+	
+	.bigg{
+		font-size:20px;
+		font-family:'Dhurjati', sans-serif;
+		font-weight:bold;
+		padding-left:20px;
+		padding-right:20px;
+		margin-top:10px; 
+		color:black; 
+		text-align:center;  
+	  }  
+
+	 @keyframes bganimateb{
+	   
+	  from{
+		 margin-right:300px;
+	  } 
+	   
+	  to{
+		margin-left:0px;
+	  }
+
+	 }
+
+           </style> 
+      </head>
+  
+       <body>     
+        
+        
+
+           <!-- Full-page overlay -->
+            <div style="display:none" id="overlayi" class="overlay">
+                <div class="overlay-content">
+                    <div class="spinner"></div>
+                    <p>Deleting...</p>
+                </div>
+            </div> 
+ 
+          <%- include('../partials/topbar.ejs') %>  
+
+          <!-- Page Header Start -->
+          <div class="container-fluid mb-5 headerimg">
+              <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+                  <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color:white">EDIT PRODUCT</h1>
+                  <div class="d-inline-flex">
+                      <p class="m-0"><a style="color:#fff; font-weight:bold; font-size:18px;" href="/">Home</a></p>
+                      <p class="m-0 px-2">-</p>
+                      <p style="color:white; font-size:18px;" class="m-0">Edit Product</p>
+                  </div>
+              </div>
+          </div>
+          <!-- Page Header End -->
+
+     <div class="postcontent">    
+        <p class="bigg">Edit Product before upload</p>   
+          <form id="postaredit" data-postid ='<%= prod._id %>' enctype="multipart/form-data">     
+            <input id="pname" type="text" value="<%=prod.productName%>" required>   
+            <input id="priceuk" type="number" value="<%=prod.priceuk.replace(/[^0-9.]/g, '') %>" required>
+            <input id="pricena" type="number" value="<%=prod.pricena.replace(/[^0-9.]/g, '') %>" required> 
+            <input id="pdesc" type="text" value="<%=prod.productDescription%>" required> 
+            <input id="pweight" type="number" value="<%=prod.productWeight.replace(/[^0-9.]/g, '') %>" required>
+             
+              
+            <br>
+            <label for="sizes" style="color:green; font-weight:bold; margin-top:20px">Sizes variation:</label>  
+            <!---Display all sizes variation under the product---> 
+            <div class="form-group">
+              <% prod.variation.forEach(variation => { %> 
+                  <% variation.sizes.forEach((size, index) => { %> 
+                   <!-- Display the length of the sizes array in a hidden div -->
+              <div style="display:none" id="dlength" sizeslength = '<%= variation.sizes.length %>'></div>
+                    <div class="size-group" id="<%=size._id%>" dataindex="<%=index%>" style="margin-top:20px">  
+                      <div style='display:flex; justify-content:right'>
+                        <button type='button' style='background-color:red; border:none; color:white' onclick="removeSize(`<%=size._id%>`)">Remove size group</button>
+                    </div> 
+                       <p style="font-weight:bold">Size <%= index + 1%></p>   
+                      <label for="sizeName<%= index %>">Size Name:</label>  
+                      <input type="text" id="sizeName<%= index %>" value="<%= size.sizeName %>" required>   
+                      
+                      <label for="priceUk<%= index %>">Price (£):</label>  
+                      <input type="number" id="priceUk<%= index %>" value="<%= size.priceAdjustmentUk.replace(/[^0-9.]/g, '') %>" required>  
+                      
+                      <label for="priceNa<%= index %>">Price (₦):</label>
+                      <input type="number" id="priceNa<%= index %>" value="<%= size.priceAdjustmentNa.replace(/[^0-9.]/g, '') %>" required>    
+                  </div>
+                      <% }); %> 
+              <% }); %>  
+          </div>
+               
+
+            
+          <div id="variations" style="display: none;">
+            <!-- Dynamic size variation fields will be added here -->
+          </div> 
+
+            <!---Display all existing uploaded images for the product--->  
+            <div class="prodimgs"> 
+              <div style="display:none" id="plento" plent = '<%=prod.productImage.length%>'></div>
+            <% prod.productImage.forEach((each)=>{ %> 
+              <div class="thisprodimgdiv">
+                <i class="fa fa-trash alldelicon" theimgid = '<%=each._id%>'></i>
+             <img src="/<%=each.path%>" class="thisprodimg" alt="uniquefashion">
+             </div>
+            <% }); %> 
+          </div> 
+         <br>  <p style="text-align:center">Add new images to the existing one</p> <br>
+         <button type="button" onclick="addVariation()">Add Size Variation</button> <br> <br>
+             <input type="file" id='adminfile' accept="image/*"> 
+            <button id="postingg" class="postbut">Save changes</button>  
+            </form>      
+       </div>      
+
+       <%- include('../partials/footer.ejs') %> 
+
+
+        <script>     
+
+        //add more size variations  
+    var variationIndex = 0;
+
+function addVariation() {
+  variationIndex++;   
+    var variations = document.getElementById('variations');
+    variations.style.display = 'block';
+    var newDiv = document.createElement('div');  
+    // Set a unique ID
+    newDiv.id = `size${variationIndex}`;   
+    newDiv.setAttribute('data-index', variationIndex); // Use data attribute for unique indexing
+    //give any generated div class name so that we cann use to loop through and derive the generated inputs id
+    newDiv.classList.add('variation-group'); 
+    newDiv.innerHTML = `    
+    <div style='display:flex; justify-content:right'>
+    <button type='button' style='background-color:red; border:none; color:white' onclick="removeSizef('size${variationIndex}')">Remove size</button>
+</div> 
+    <label style='color:green; font-weight:bold' for="sizes${variationIndex}">New Size</label>   
+           <div class="form-group">
+                <p>Size Name</p> <br>  
+              <input type="text" id="sizename${variationIndex}" name='sizename${variationIndex}' required> 
+            <br> </div>  <br>
+               
+              <div class="form-group">
+                <p>Price Adjustment((£)rewrite default price if no adjustment)</p>    
+          <br>    <input type="number" id="priceuk${variationIndex}" name='priceuk${variationIndex}' required>
+          <br>    </div> <br>
+               
+
+               <div class="form-group">
+                <p>Price Adjustment((₦)rewrite default price if no adjustment)</p>  
+           <br>   <input type="number" id="pricena${variationIndex}" name='pricena${variationIndex}' required>  
+          <br>   </div> `;
+          variations.appendChild(newDiv);
+}    
+  
+
+
+  //handle removeSize function frontend 
+  function removeSizef(sizeUniqueNumber) {
+             var elementToRemove = document.getElementById(sizeUniqueNumber);  // tracked  
+             if (elementToRemove) {
+        elementToRemove.remove();
+    }
+      }
+     
+
+
+     // Append dynamic fields to formData (frontend)   sizes is declared since the beginning of our code because we will use two times for pushing
+     var  sizes = []; 
+     function updateSizes() {
+    document.querySelectorAll('.variation-group').forEach(group => {
+        const index = group.getAttribute('data-index');
+        sizes.push({
+            sizeName: document.getElementById(`sizename${index}`).value,
+            priceAdjustmentUk: document.getElementById(`priceuk${index}`).value + '£',
+            priceAdjustmentNa: document.getElementById(`pricena${index}`).value + '₦',
+        });
+    });  
+
+     // Append dynamic fields to formData (backend)
+    var sizeGroup = document.querySelectorAll('.size-group');
+               sizeGroup.forEach((sg)=>{
+                   var index = sg.getAttribute('dataindex');
+                    sizes.push({ 
+                          sizeName: document.getElementById(`sizeName${index}`).value,
+                          priceAdjustmentUk: document.getElementById(`priceUk${index}`).value + '£',
+                          priceAdjustmentNa: document.getElementById(`priceNa${index}`).value + '₦',
+                    });
+               }); 
+      }
+
+          //handle removeSize function  backend
+      async function removeSize(sizeUniqueNumber) {
+             var elementToRemove = document.getElementById(sizeUniqueNumber);  // tracked  
+             var dlength = document.getElementById('dlength'); 
+             var dlengthh = dlength.getAttribute('sizeslength');
+             
+              var confirmed = confirm('Are you sure you want to perform this action');
+                if(!confirmed) {
+                    return 
+                }  else {   
+        //remove from database
+        try{
+          const dellres = await fetch(`/adelete/${sizeUniqueNumber}/${dlengthh}`, {
+          method : 'delete',
+        }); 
+        if(!dellres.ok) {
+           throw dellres;
+        }  
+        alert('Size group removed successfully');
+        location.reload();
+      }  catch(err) {
+           var error = await err.text();
+           alert(error);
+           location.reload();
+      }
+    } 
+  }
+      
+
+          var alldelicon = document.querySelectorAll('.alldelicon');
+          alldelicon.forEach((diconn)=>{
+             diconn.onclick = async function () {
+                var imageId = diconn.getAttribute('theimgid');  
+                var plento = document.getElementById('plento');
+                var plnt = plento.getAttribute('plent');
+                var overlayi = document.getElementById('overlayi'); 
+               
+                var oconfirmed = confirm('Are you sure you want to perform this action');
+                if(!oconfirmed) {
+                    return 
+                }  else { 
+                  overlayi.style.display = 'block'; 
+               try {
+                const delresp = await fetch(`/deletingprodimg/${imageId}/${plnt}`, {
+                      method : 'delete', 
+                  });      
+                  if(!delresp.ok) {
+                        throw delresp;
+                  }    
+                  setTimeout( ()=>{ overlayi.style.display = 'none'; }, 3000); 
+                  setTimeout( ()=>{ alert('Image deleted successfully'); }, 4000);
+                  setTimeout( ()=>{ location.reload(); }, 5000); 
+              }   catch(err) {
+                   var error = await err.text();
+                   alert(error);  
+                   overlayi.style.display = 'none'; 
+              }
+             }
+            }
+          });
+         
+
+             var postaredit = document.querySelector('#postaredit'); 
+              postaredit.addEventListener('submit', async (p)=>{
+                        p.preventDefault(); 
+                        const serviceid = p.target.dataset.postid;
+                        var postingg = document.getElementById('postingg');
+ 
+                     postingg.innerHTML = 'UPDATING...';
+                     
+               const pname = document.getElementById('pname').value; 
+               const priceuk = document.getElementById('priceuk').value; 
+               const pricena = document.getElementById('pricena').value;
+               const pdesc = document.getElementById('pdesc').value; 
+               const pweight = document.getElementById('pweight').value; 
+             
+               const admfile = document.getElementById('adminfile').files[0];
+                 //update the sizes array before adding to the formdata 
+                 updateSizes();
+   
+                      const data = new FormData();
+                      data.append('productName', pname); 
+                      data.append('priceUk', priceuk + '£');
+                      data.append('priceNa', pricena + '₦'); 
+                      data.append('prodDesc', pdesc);    
+                      data.append('prodWeight', pweight + 'kg'); 
+
+           // Convert sizes array to JSON string and append
+               data.append('sizes', JSON.stringify(sizes));
+                      //check if user uploads new video or not
+                     if(admfile) { data.append('productImage', admfile); } 
+                
+                      try{
+                const ediresponse = await fetch(`/posting-edited-contentc/${serviceid}`, {
+                     
+                     method :'put',
+                     body : data,   
+                },);  
+
+                if(!ediresponse.ok){
+                    throw ediresponse;
+                }
+                  console.log(data);
+                  const posted = document.getElementById('posted');
+
+               setTimeout( ()=>{  
+               postingg.innerHTML = 'UPDATED'; 
+               }, 4000);
+
+               setTimeout( ()=>{ 
+              location.reload();
+               }, 6000);
+            }
+
+                 catch(err){ 
+                  const error = await err.text();
+                  alert(error);
+                  location.reload(); 
+                };   
+             
+             }); 
+                 
+  
+        </script>
+       </body>
+       </html> 
+    

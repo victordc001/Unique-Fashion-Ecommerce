@@ -1,0 +1,221 @@
+ 
+ 
+ 
+<!DOCTYPE html>
+<html>
+    <head>
+         <%- include('../partials/head.ejs') %> 
+         <title>Login</title> 
+
+         <style>
+
+           .errlogin{
+            font-family:'Poppins', sans-serif;  
+            color:black;
+          }  
+  
+           
+
+          .loginf{
+             min-width:100px;
+             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+             margin-left:25px;
+             margin-right:25px;
+             padding-left:20px;
+             padding-right:20px;
+             margin-top:40px;  
+             border-radius:25px;
+             background-color:white; 
+             padding-top:55px;
+             padding-bottom:25px;
+            position:fixed;
+            z-index:400;          
+            animation: rollinn 1s 1;        
+            top:40px; 
+          }    
+
+          .loginf .forpc{
+             width:60%; 
+             color:#212121;
+             text-align:center;
+             border-radius:50px; 
+          }    
+
+          .loginf .forpc i{ 
+            font-weight:bold;
+             font-size:70px; 
+             margin-top:60px;
+          }
+          
+          
+          .loginf .secondandr{
+              width:100%; 
+              text-align:center;
+          }    
+
+          .loginf .secondandr i{
+              font-size:35px;
+          } 
+
+          .loginf .secondandr p{
+             margin-top:10px;
+             font-size:20px;
+             margin-bottom:7px;
+          }
+          
+          .loginf .secondandr input{
+             width:100%;
+             border:1px solid grey;
+             margin-bottom:10px;
+             padding:13px;
+          }  
+
+          .loginf .closebtn {
+            position: absolute;
+            top: 10px;
+            right: 10px; 
+            color:red;
+            font-weight:bold;
+            margin-right:15px;
+            border-radius:50px;  
+            font-size: 30px;
+            cursor: pointer;
+        }
+ 
+          .loginf .secondandr button{
+               padding:15px;
+               border:none;
+               border-radius:5px; 
+               color:white;
+               background-color:#008080;
+               margin-bottom:13px;
+               width:100%;
+          }  
+
+          #leggo{
+            display:flex;
+            justify-content:center;
+          }   
+
+          @keyframes rollinn {
+                     from{ 
+                         margin-left:-300px;
+                     } 
+
+                      to {
+                         margin-top:40px;
+                      }
+                 }
+
+       
+         </style>
+
+    </head>
+
+     <body> 
+
+ 
+      <form id="leggo">  
+        <div class="loginf" id="loginFormm">    
+          <h1 style="font-size:18px; text-align:center; margin-bottom:10px;">You must login first</h1> 
+            <span class="closebtn" id="closeLogin">&times;</span>
+              
+           <div class="secondandr">  
+             <input id="logme" type="email" placeholder="Email" required>  
+             <input id="logpass" type="password" placeholder="Password" required>
+             <p id="errlogin"></p>
+             <button id="mlog">Log In</button>
+             <div class="forgotandcreate"> 
+               <a style="color:black" href='/signup'>Don't have an account?</a>
+               <br>
+               <a style="color:black" href="/reset-password">Forgot password?</a> 
+             </div>  
+            
+             </div> 
+
+        </div>    
+        
+       </form> 
+ 
+        
+         <script>    
+
+
+ // Close Login Form
+ document.getElementById('closeLogin').addEventListener('click', function() {
+            document.getElementById('hiddenlf').style.display = 'none';
+        });
+
+
+var leggo = document.getElementById('leggo');
+leggo.addEventListener('submit', async (p)=>{
+    p.preventDefault();
+               
+
+                   let logme = document.getElementById('logme'); 
+                   let logpass = document.getElementById('logpass');
+                   let mlog = document.getElementById('mlog');
+                   let loginerror = document.getElementById('errlogin');
+                   mlog.innerHTML = 'Processing';
+                   mlog.style.opacity = '0.855';
+
+                   const logindata = {
+                     regemail : logme.value,
+                     regpass : logpass.value, 
+                   } 
+
+                   
+                try{
+                   const response = await fetch('/logino', {
+                       method : 'post',
+                       body : JSON.stringify(logindata),
+                       headers : {
+                          'Content-Type' : 'application/json',
+                           Accept : 'application/json',
+                       },
+                   });
+                   
+                   if(!response.ok){
+                     mlog.innerHTML = 'Log In';
+                       throw response;
+                   } 
+
+                   mlog.style.opacity = '1';
+                   const result = await response.json();
+                   loginerror.innerHTML = 'Login success'; 
+                   loginerror.style.color = 'black';
+                   loginerror.style.marginTop = '10px';
+                   loginerror.style.fontSize = '16px'; 
+
+                      
+                   setTimeout( ()=> {
+                     loginerror.innerHTML = 'waiting for redirect..'; 
+                }, 1000);
+
+                   setTimeout( ()=> {
+                  window.location.assign(`/verification/${logme.value}`); 
+                }, 3000);
+
+               }
+
+
+                 catch(error){ 
+                   const errresult = await error.text(); 
+                   loginerror.innerHTML = errresult;
+                   loginerror.style.color = 'red';
+                   loginerror.style.marginTop = '10px';
+                   loginerror.style.fontSize = '16px';
+                   loginerror.style.fontWeight = 'bold'; 
+                 }  
+                  
+          });       
+
+       
+
+
+
+
+         </script>
+
+       </body>
+</html> 

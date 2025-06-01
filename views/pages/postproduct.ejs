@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Admin Product Upload</title>  
+    <meta property="og:title" content="Upload a Product: Share Your Items with Us">
+
+    <style>
+        .loginf {
+            background-color: #fff;
+            padding: 20px; 
+            padding-left: 20px;
+            padding-right: 20px;
+            margin-left: 20px;
+            margin-right: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);  
+            width: 100%;
+        }        
+
+        .encloser {
+            display: flex;
+            justify-content: space-between;
+            min-width: 100px;
+            margin-left: 10px;
+            margin-right: 10px;
+            padding-left: 10px;
+            padding-right: 10px;
+        }  
+
+        .uploadicon {
+            width: 50%;
+            color: #008080;
+            font-weight: bold;
+            font-size: 150px;
+            text-align: center;
+            padding-top: 130px; 
+            animation: upl 0.5s linear infinite;
+        }   
+
+        @keyframes upl {
+            from {
+                color: black;
+            }   
+            to {
+                color: #008080;
+            }
+        }
+
+        .hh {
+            text-align: center;
+            color: #008080;
+            margin-bottom: 20px; 
+            font-size: 24px;
+        }  
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #008080;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        input[type="file"] {
+            border: none;
+            background-color: #f9f9f9; 
+            width: 100%;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #008080;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #006666;
+        }
+
+        @media only screen and (max-width: 600px) { 
+            .encloser {
+                display: block;
+            } 
+            .loginf {
+                margin: 0px; 
+                min-width: 100px;
+            }
+            .uploadicon {
+                display: none;
+            }
+        } 
+
+        .variation-group,
+        .size-group {
+            margin-bottom: 1em;
+            position: relative;
+        }
+
+        .remove-btn {
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        .remove-btn:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<body>    
+
+    <%- include('../partials/topbar.ejs') %> 
+
+    <!-- Page Header Start -->
+    <div class="container-fluid mb-5 headerimg">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color:white">UPLOAD PRODUCTS</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a style="color:#fff; font-weight:bold; font-size:18px;" href="/">Home</a></p>
+                <p class="m-0 px-2">-</p>
+                <p style="color:white; font-size:18px;" class="m-0">Upload Products</p>
+            </div>
+        </div>
+    </div> <br><br>
+    <!-- Page Header End -->
+ 
+    <div class="encloser"> 
+        <div class="uploadicon">
+            <i class="fa fa-upload"></i> 
+        </div>
+        <div class="loginf">
+            <h1 class="hh">Upload New Product</h1>
+            <form id="uploadprod" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="productName">Product Name</label>
+                    <input type="text" id="productName" name="productName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" name="category" required>
+                        <option value="maledresses">Male Dress</option>
+                        <option value="femaledresses">Female Dress</option> 
+                        <option value="kidwears">Kid Wears</option>
+                        <option value="shoes">Shoes</option> 
+                    </select>
+                </div>
+  
+                <div class="form-group">
+                    <label for="priceuk">Price (£)</label>
+                    <input type="number" id="priceuk" name="priceuk" required>
+                </div>  
+
+                <div class="form-group">
+                    <label for="pricena">Price (₦)</label>
+                    <input type="number" id="pricena" name="pricena" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Product Description</label>
+                    <textarea id="description" name="description" rows="4" required></textarea>
+                </div>  
+
+                <div class="form-group">
+                    <label for="weight">Product Weight (kg)</label> 
+                    <input type="number" id="prodweight" name="prodweight" required>
+                </div> 
+
+                <div class="form-group">
+                    <label for="length">Product Length (cm)</label> 
+                    <input type="number" id="prodlength" name="prodlength" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="height">Product Height (cm)</label> 
+                    <input type="number" id="prodheight" name="prodheight" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="width">Product Width (cm)</label> 
+                    <input type="number" id="prodwidth" name="prodwidth" required>
+                </div>
+
+                   <div id="variations" style="display: none;">
+                    <!-- Dynamic variation fields will be added here -->
+                  </div>   
+ 
+                      <label for="firstsize" style="text-align:center; background-color:#008080; color:white; margin-top:15px; margin-bottom:15px; text-transform:uppercase">Enter at least one size variation</label>   
+                           <div class="form-group">
+                                <label for="sizenamealll">Size Name</label>  
+                              <input type="text" id="sizenameal" required> 
+                             </div> 
+                               
+                              <div class="form-group">
+                                <label for="priceukalll">Price Adjustment((£)rewrite default price if no adjustment)</label>    
+                              <input type="number" id="priceukal" required>
+                              </div>
+                               
+          
+                               <div class="form-group">
+                                <label for="pricenalll">Price Adjustment((₦)rewrite default price if no adjustment)</label>  
+                              <input type="number" id="pricenaal" required>  
+                             </div>
+
+                <div class="form-group">
+                    <label for="productImage">Upload Image</label>
+                    <input type="file" id="productImage" name="productImage" accept="image/*" multiple required>
+                </div>
+
+                <button type="button" onclick="addVariation()">Add More Size Variation</button> <br> <br>
+                <button type="submit" id="subm" class="submit-btn">Upload Product</button>
+            </form>
+        </div> 
+    </div> 
+
+    <script> 
+
+    //add variations  
+    var variationIndex = 0;
+
+      function addVariation() {
+        variationIndex++;   
+          var variations = document.getElementById('variations');
+          variations.style.display = 'block';
+          var newDiv = document.createElement('div');  
+          // Set a unique ID
+          newDiv.id = `size${variationIndex}`;   
+          newDiv.setAttribute('data-index', variationIndex); // Use data attribute for unique indexing
+          //give any generated div class name so that we cann use to loop through and derive the generated inputs id
+          newDiv.classList.add('variation-group'); 
+          newDiv.innerHTML = `    
+          <div style='display:flex; justify-content:right'>
+          <button type='button' style='background-color:red; border:none; color:white' onclick="removeSize('size${variationIndex}')">Remove size</button>
+      </div> 
+          <label for="sizes${variationIndex}">New Size</label>   
+                 <div class="form-group">
+                      <label for="sizename${variationIndex}">Size Name</label>  
+                    <input type="text" id="sizename${variationIndex}" name='sizename${variationIndex}' required> 
+                   </div> 
+                     
+                    <div class="form-group">
+                      <label for="priceuk${variationIndex}">Price Adjustment((£)rewrite default price if no adjustment)</label>    
+                    <input type="number" id="priceuk${variationIndex}" name='priceuk${variationIndex}' required>
+                    </div>
+                     
+
+                     <div class="form-group">
+                      <label for="pricena${variationIndex}">Price Adjustment((₦)rewrite default price if no adjustment)</label>  
+                    <input type="number" id="pricena${variationIndex}" name='pricena${variationIndex}' required>  
+                   </div> `;
+                variations.appendChild(newDiv);
+      }    
+
+      //handle removeSize function 
+      function removeSize(sizeUniqueNumber) {
+             var elementToRemove = document.getElementById(sizeUniqueNumber);  // tracked  
+             if (elementToRemove) {
+        elementToRemove.remove();
+    }
+      }
+          
+
+          // Append dynamic fields to formData
+          var sizes = [];  
+                      function updateSizes() {  
+      //first push the already appearing size group 
+       sizes.push({ 
+            sizeName: document.getElementById('sizenameal').value,
+            priceAdjustmentUk: document.getElementById('priceukal').value + '£',
+            priceAdjustmentNa: document.getElementById('pricenaal').value + '₦',
+       });
+      
+    document.querySelectorAll('.variation-group').forEach(group => {
+        const index = group.getAttribute('data-index');
+        sizes.push({
+            sizeName: document.getElementById(`sizename${index}`).value,
+            priceAdjustmentUk: document.getElementById(`priceuk${index}`).value + '£',
+            priceAdjustmentNa: document.getElementById(`pricena${index}`).value + '₦',
+        });
+    }); 
+}
+
+
+
+
+               document.getElementById('uploadprod').addEventListener('submit', async (e) => {
+                e.preventDefault();    
+                
+                const formData = new FormData(); 
+
+                var prodname = document.getElementById('productName').value;
+                var categ = document.getElementById('category').value; 
+                var priceuk = document.getElementById('priceuk').value;
+                var pricena = document.getElementById('pricena').value;
+                var desc = document.getElementById('description').value; 
+                var prodweight = document.getElementById('prodweight').value;  
+                var prodheight = document.getElementById('prodheight').value;
+                var prodlength = document.getElementById('prodlength').value;
+                var prodwidth = document.getElementById('prodwidth').value;
+                var prodimg = document.getElementById('productImage').files; 
+            
+
+            updateSizes(); 
+           // Convert sizes array to JSON string and append
+           formData.append('sizes', JSON.stringify(sizes));
+
+            const subm = document.getElementById('subm');
+            subm.innerHTML = 'Uploading..';
+            subm.disabled = true;
+            subm.style.opacity = '0.678';
+   
+
+            formData.append('productname', prodname); 
+            formData.append('proddesc', desc);
+            formData.append('prodpriceuk', priceuk + '£');
+            formData.append('prodpricena', pricena + '₦');
+            formData.append('prodcategory', categ);   
+            formData.append('prodweight',  prodweight + 'kg');     
+            formData.append('prodheight',  prodheight + 'cm');
+            formData.append('prodlength',  prodlength + 'cm');
+            formData.append('prodwidth',  prodwidth + 'cm'); 
+            for(var i = 0; i < prodimg.length; i++) { 
+            formData.append('producimgv', prodimg[i]);
+            }
+
+
+            try {
+                const resp = await fetch('/uploadaproduct', {  
+                    method: 'post',
+                    body: formData, 
+                });
+
+                if (!resp.ok) {
+                    throw resp;
+                }
+
+                setTimeout(() => {
+                    subm.style.opacity = '2'; 
+                }, 2000); 
+
+                setTimeout(() => {
+                    subm.innerHTML = 'Uploaded successfully🎉🎉🎉';   
+                }, 4000);   
+
+                setTimeout(() => {
+                    location.reload();
+                }, 6000);
+
+            } catch (err) {
+                subm.disabled = false;
+                subm.style.opacity = '2';
+                const error = await err.text();
+                alert('something went wrong!, pls try again');  
+                location.reload(); 
+                subm.innerHTML = 'Upload Product';  
+            }
+        });     
+
+
+ 
+
+    </script> 
+
+    <%- include('../partials/footer.ejs') %>
+</body>
+</html>

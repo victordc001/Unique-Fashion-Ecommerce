@@ -1,0 +1,58 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head.ejs'); %>
+    <title>Error - Something Went Wrong</title>  
+
+    <meta property="og:title" content="Oops! Something Went Wrong: Error Page">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #008080;
+            border-radius: 8px;
+            background-color: white;
+        }
+        h1 {
+            color: #008080;
+            font-size: 30px;
+        }
+        p {
+            font-size: 19px;
+            margin: 20px 0;
+        }
+        a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #008080; 
+            margin-top: 5px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        } 
+        a:hover {
+            background-color: #006d6d; 
+            text-decoration:none;
+            color:white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Error - Something Went Wrong</h1>
+        <p>We're sorry, but an error occurred while processing your request.</p>
+        <p>Please try again or return to the <a href="/">homepage</a>.</p>
+    </div>
+</body>
+</html>

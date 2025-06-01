@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+    <%- include('../partials/head.ejs') %>  
+     <title>Edit Profile</title>   
+     <meta property="og:title" content="Update Password: Secure Your Account with a New Password">
+
+       <style>  
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4; 
+        }  
+
+        .encloser{
+              display:flex;
+              justify-content:space-between;
+              min-width:100px;
+              margin-left:20px;
+              margin-right:20px;
+              padding-left:20px;
+              padding-right:20px;
+        }  
+
+        .profileicon{
+              width:50%;
+              color:black;
+              font-weight:bold;
+              font-size:100px;
+              text-align:center;
+              padding-top:100px; 
+        }    
+
+        .profile-container {
+            width:100%;     
+            margin-left:20px;
+            margin-right:20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-container h2 {
+            color: #008080;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .form-group input[type="text"], 
+        .form-group input[type="email"], 
+        .form-group input[type="password"], 
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .form-group input[type="text"]:focus, 
+        .form-group input[type="email"]:focus, 
+        .form-group input[type="password"]:focus, 
+        .form-group select:focus {
+            border-color: #008080;
+            outline: none;
+        }
+
+        .btn-save {
+            display: inline-block;
+            background-color: #008080;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-save:hover {
+            background-color: #006666;
+        }  
+
+        .btn-cancel {
+            display: inline-block;
+            background-color: #ccc;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .btn-cancel:hover {
+            background-color: #999;
+        }   
+
+
+        @media only screen and (max-width:600px) { 
+
+            .encloser{
+               display:block;
+            } 
+
+            .profile-container {
+                  margin:0px;
+            }
+
+                 .profileicon{
+                      display:none;
+                 }
+        }
+    </style>
+</head>
+<body> 
+
+    <%- include('../partials/topbar.ejs') %>  
+
+    <!-- Page Header Start -->
+    <div class="container-fluid mb-5 headerimg">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color:white">UPDATE PASSWORD</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a style="color:#fff; font-weight:bold; font-size:18px;" href="/">Home</a></p>
+                <p class="m-0 px-2">-</p>
+                <p style="color:white; font-size:18px;" class="m-0">Update Password</p>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+  <div class="encloser"> 
+    <div class="profileicon">
+         <i class="fa fa-user-edit"></i>
+    </div>
+     <div class="profile-container">
+        <h2>Update Your Password</h2>
+        <form id="updatestart">
+            <div class="form-group">
+                <label for="oldpassword">Old Password</label>
+                <input type="password" id="oldpass" name="username" required>
+            </div> 
+            <div class="form-group">
+                <label for="newpassword">New Password</label>
+                <input type="password" id="newpass" required>
+            </div>  
+            <div class="form-group">
+                <label for="confirmpassword">Confirm New Password</label>
+                <input type="password" id="confpass" required>
+            </div>  
+            <p id="erre"></p>
+            <button type="submit" id="saveit" class="btn-save">Save Changes</button> 
+        </form>
+    </div> 
+    </div>   
+
+      <script>  
+           
+            
+   newpass.onkeyup = function() {
+    var errer = document.getElementById('erre');
+    var saveitt = document.getElementById('saveit');  
+                    if(newpass.value.search(/[a-z]/) < 0){
+                        errer.innerHTML = 'incomplete!, password must contain lowercase character';
+                        errer.style.color = 'red';
+                        errer.style.textAlign = 'center';
+                        errer.style.marginTop = '7px';
+                        errer.style.fontWeight = 'bold';
+                        errer.style.fontSize = '16px';
+                        saveitt.disabled = true;
+                        saveitt.style.opacity = '0.2';
+                        errer.style.fontFamily = 'helvetica';
+                    }   
+    
+                    
+    
+                      
+                   else if(newpass.value.search(/[A-Z]/) < 0){
+                        errer.innerHTML = 'incomplete!, password must contain uppercase character';
+                        errer.style.color = 'red';
+                        errer.style.textAlign = 'center';
+                        errer.style.marginTop = '7px';
+                        errer.style.fontWeight = 'bold';
+                        errer.style.fontSize = '16px';
+                        saveitt.disabled = true;
+                        saveitt.style.opacity = '0.2';
+                        errer.style.fontFamily = 'helvetica';
+                    }     
+    
+                    else if(newpass.value.search(/[0-9]/) < 0){
+                        errer.innerHTML = 'invalid!, password must contain number';
+                        errer.style.color = 'red';
+                        errer.style.textAlign = 'center';
+                        errer.style.marginTop = '7px';
+                        errer.style.fontWeight = 'bold';
+                        errer.style.fontSize = '16px';
+                        saveitt.disabled = true;
+                        saveitt.style.opacity = '0.2';
+                        errer.style.fontFamily = 'helvetica';
+                    }  
+    
+                    else if(newpass.value.search(/[!@#^&*$£%]/) < 0){
+                        errer.innerHTML = 'password must contain at least one symbol';
+                        errer.style.color = 'red';
+                        errer.style.textAlign = 'center';
+                        errer.style.marginTop = '7px';
+                        errer.style.fontWeight = 'bold';
+                        saveitt.disabled = true;
+                        saveitt.style.opacity = '0.2';
+                        errer.style.fontSize = '16px';
+                        errer.style.fontFamily = 'helvetica';
+                    } 
+     
+    
+    
+                     
+                    else if(newpass.value.length < 8){
+                        errer.innerHTML = 'oops!, password is too short and weak';
+                        errer.style.color = 'red';
+                        errer.style.textAlign = 'center';
+                        errer.style.marginTop = '7px';
+                        errer.style.fontWeight = 'bold';
+                        errer.style.fontSize = '16px';
+                        saveitt.disabled = true;
+                        saveitt.style.opacity = '0.2';
+                        errer.style.fontFamily = 'helvetica';
+                    }  
+    
+                    else if(newpass.value.length > 24){
+                        errer.innerHTML = 'oops!, password is too long';
+                        errer.style.color = 'red';
+                        errer.style.textAlign = 'center';
+                        errer.style.marginTop = '7px';
+                        errer.style.fontWeight = 'bold';
+                        errer.style.fontSize = '16px';
+                        saveitt.disabled = true;
+                        saveitt.style.opacity = '0.2';
+                        errer.style.fontFamily = 'helvetica';
+                    } 
+    
+    
+    
+                     else{
+                        errer.innerHTML = 'Password is strong';
+                        errer.style.color = 'green';
+                        errer.style.textAlign = 'center';
+                        errer.style.marginTop = '7px';
+                        errer.style.fontWeight = 'bold';
+                        errer.style.fontSize = '16px';
+                        saveitt.disabled = false;
+                        saveitt.style.opacity = '2';
+                        errer.style.fontFamily = 'helvetica';
+                     } 
+     
+          };        
+
+
+
+          confpass.onkeyup = function() {  
+    var errer = document.getElementById('erre');
+    var saveitt = document.getElementById('saveit'); 
+                    errer.innerHTML = '';
+                    if(newpass.value !== confpass.value){
+                       errer.innerHTML = 'Fields must be of same value'; 
+                       errer.style.color = 'red';
+                       errer.style.textAlign = 'center';
+                       errer.style.marginTop = '7px';
+                       errer.style.fontWeight = 'bold';
+                       errer.style.fontSize = '16px';
+                    saveitt.disabled = true;
+                    saveitt.style.opacity = '0.2';
+                    errer.style.fontFamily = 'helvetica';
+                    }  
+
+                    else{
+ 
+                        errer.innerHTML = 'perfect';
+                        errer.style.color = 'green';
+                        errer.style.textAlign = 'center';
+                        errer.style.marginTop = '7px';
+                        errer.style.fontWeight = 'bold';
+                        errer.style.fontSize = '16px';
+                   saveitt.disabled = false;
+                   saveitt.style.opacity = '2';
+                   errer.style.fontFamily = 'helvetica';   
+                        
+                    } 
+
+                 } 
+
+
+
+
+
+           var updating = document.getElementById('updatestart'); 
+           updating.addEventListener('submit', async (e)=>{ 
+            var newpass = document.getElementById('newpass');
+            var confpass = document.getElementById('confpass'); 
+            var errer = document.getElementById('erre'); 
+            var oldpass = document.getElementById('oldpass'); 
+            var saveitt = document.getElementById('saveit'); 
+            e.preventDefault();  
+            saveitt.innerHTML = 'Updating..';
+            //change button state
+            saveitt.style.opacity = 0.3;
+            saveitt.disabled = true;
+            // collect the update infos
+            const upddata = {
+                 oldpswd : oldpass.value,  
+                 mainpswd : confpass.value,
+            }
+               
+
+            try{
+            const resp = await fetch('/updateprofilepassword', {
+                 method : 'post',
+                 body : JSON.stringify(upddata),
+                 headers : {
+                       'Content-Type' : 'application/json',
+                       Accept: 'application/json',
+                 },
+            });    
+
+            if(!resp.ok) {
+                  throw resp;
+            }     
+
+              //change button state 
+              saveitt.innerHTML = 'Updated';
+              setTimeout(()=>{ 
+                saveitt.style.opacity = 2;
+                saveitt.disabled = false;
+              }, 3000);  
+ 
+              setTimeout(()=>{  
+   newpass.value = ''; 
+   confpass.value = '';
+   oldpass.value = ''; 
+   errer.innerHTML = ''; 
+   saveitt.innerHTML = 'Save Changes';
+              }, 3200);
+
+        }  catch (err) {
+              const error = await err.text();  
+              errer.innerHTML = error;
+              errer.style.color = 'red';
+              errer.style.marginTop = '10px';
+              errer.style.fontSize = '15px';
+              errer.style.fontWeight = 'bold';  
+              saveitt.style.opacity = 2;
+              saveitt.disabled = false;
+              saveitt.innerHTML = 'Save Changes';
+        }
+
+        
+           });
+      </script> 
+
+        <%- include('../partials/footer.ejs') %>
+</body>
+</html>

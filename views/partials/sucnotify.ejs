@@ -1,0 +1,61 @@
+ 
+
+    
+
+ <!DOCTYPE html>
+ <html> 
+      <head>
+          <style>
+               .encl {
+         min-width:100px;
+         margin-left:15px;
+         margin-right:15px;
+       }
+ 
+
+.snotification {
+    width: calc(100% - 40px); /* Subtract margins to fit within the viewport */
+    background: linear-gradient(135deg, #003B46 0%, #004d40 40%, #008080 70%, #00bfae 100%); color: white; /* White text color */ 
+    box-sizing:border-box;
+    position: fixed;
+    z-index:100;
+    margin-top:20px; 
+    padding:15px;
+    border-radius: 5px; 
+    display:none;
+    animation:fadein 1.1s 1; 
+}  
+ 
+
+@keyframes fadein {
+    from {
+        opacity: 0; /* Start completely transparent */
+    }
+    to {
+        opacity: 1; /* End fully opaque */
+    }
+}
+
+
+
+#scancel-button {
+    background-color: transparent; /* Transparent background */
+    border: none; /* No border */ 
+    border:2px solid white;
+    color: white; /* White text */
+    cursor: pointer; /* Pointer cursor */ 
+    top: 10px; /* Adjust as necessary */
+    right: 10px; /* Adjust as necessary */
+}
+          </style>
+      </head>
+    <body>    
+        <div class="encl">
+            <div id="success-notification" class="snotification">
+                <p id="success-message"></p> <br>
+                <button id="scancel-button">Cancel</button>
+            </div>
+            </div> 
+</body>
+ </html>
+   

@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head.ejs') %> 
+
+    <meta property="og:title" content="Your Cart: Review & Complete Your Purchase">
+
+    <style>
+        .cart-item {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .cart-item button {
+            background-color: #008080;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .cart-item button:hover {
+            background-color: #005757;
+        }
+
+        .cart-item .remove-btn {
+            background-color: red;
+        }
+
+        .griddo {
+            display: grid;
+            grid-row-gap: 40px;
+            grid-column-gap: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 3fr));
+            min-width: 100px;
+            margin-left: 10px;
+            margin-right: 10px; 
+        }
+
+        .checkout-section {
+            border-top: 2px solid #ddd;
+            padding-top: 30px;
+        }
+
+        .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
+            background-color:black; /* Dark Orange */
+            border-color: black;
+        }
+
+        .custom-checkbox .custom-control-label::before {
+            border-color:black; /* Dark Orange */
+        }
+
+        .place-order-btn {
+            background-color: #008080;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .place-order-btn:hover {
+            background-color: #005757;
+        } 
+
+
+        /* modify cart pop up modal*/ 
+
+.modal {
+    position: fixed;
+    z-index: 500; /* Sit on top */
+    left: 0;
+    display:none;   /*Hidden initially */
+    top: 20px;
+    width: 100%; /* Full width */
+    padding-bottom:20px;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    animation: fadeIn 1.0s;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    transform: translateZ(0);
+    transition: all 0.3s ease;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+select, input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border 0.3s ease;
+}
+
+select:focus, input[type="number"]:focus {
+    border: 2px solid #008080; /* Primary color */
+}
+
+  .buttoner {
+    background-color: #008080; /* Primary color */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+ 
+  
+.notificationz {
+    position: fixed;
+    bottom : 20px;
+    right: 20px;
+    background-color: #4caf50;
+    color: white;
+    min-width:100px;
+    left:20px; 
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    opacity: 1; 
+    z-index:300;
+    transform: translateY(0);
+}
+
+.hidden {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+/* Animation for modal */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}    
+
+
+#suggestionsContainer {
+    border: 1px solid #ccc; /* Light gray border */
+    max-height: 200px; /* Limit the height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    position: fixed;  /* Position it relative to the input */ 
+    margin-top:1000px;
+    background: white; /* White background for contrast */
+    z-index: 1000; /* Ensure it appears above other elements */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    border-radius: 4px; /* Rounded corners */
+    width: calc(100% - 2px); /* Match the width of the input */
+    margin-top: 2px; /* Small gap from the input */ 
+
+}
+
+.suggestion-item {
+    padding: 12px 16px; /* Padding inside each suggestion box */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+    border-bottom: 1px solid #eaeaea; /* Light border between items */
+}
+
+.suggestion-item:last-child {
+    border-bottom: none; /* Remove border from the last item */
+}
+
+.suggestion-item:hover {
+    background-color: #f0f8ff; /* Light blue background on hover */
+    color: #333; /* Dark text color on hover */
+}
+
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/topbar.ejs') %> 
+
+    <!-- Page Header Start -->
+    <div class="container-fluid mb-5 headerimg">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color:white">Your Cart</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a style="color:#fff; font-weight:bold; font-size:18px;" href="/">Home</a></p>
+                <p class="m-0 px-2">-</p>
+                <p style="color:white; font-size:18px;" class="m-0">Cart</p>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End --> 
+
+   
+ 
+
+
+    <!-- Cart Start -->
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Your Cart</span></h2>
+        </div>   
+
+        <div id="notificationz" class="notificationz hidden">
+            <p>Your order request has been sent successfully and is under review by our customer care, kindly stay updated as the shipping fee will be sent to your provided email address along with the payment guide..Thanks for choosing Unique Fashion!</p>
+            <button id="close-btnz">Close</button>
+        </div>      
+
+        <% if (carts.length > 0) { %>
+            <div class="griddo">
+                <% carts.forEach(item => { %> 
+                  <div style="display:none" cartdetail='<%= JSON.stringify(item) %>'  productId="<%=item.product._id%>" class="allditems"></div>
+                    <div class="cart-item">
+                        <h5 class="font-weight-semi-bold mb-3"><%= item.product.productName %></h5>
+                        <p><%= item.product.productDescription %></p>
+                        <p><strong>Quantity:</strong> <%= item.quantity %></p>
+                        <p><strong>Size:</strong> <%= item.size %></p>
+                        <p><strong>Price:</strong> <%= item.totalprice %></p>
+                        <p><strong>Total Price:</strong> <%= parseFloat(item.totalprice) * item.quantity %>.00£</p> 
+                        
+                        <button class="modify-cart" updateform="<%=`updateform${item._id}`%>" data-inp="<%=`dquant${item._id}`%>"  data-select="<%=`allsizes${item._id}`%>" closemodal="<%=`modalclose${item._id}`%>" modal-id="<%=`modal${item._id}`%>" data-id="<%= item._id %>">Modify Cart</button>
+                        <button class="remove-btn" data-id="<%= item._id %>">Remove</button>
+                    </div>  
+
+                    <!--For each cart there should be div for modifying them-->
+                       <!--Modify cart initially hidden-->
+    <div class="modal" id="<%=`modal${item._id}`%>">
+        <div class="modal-content">
+            <span id="<%=`modalclose${item._id}`%>" class="close">&times;</span>
+            <h2>Modify Cart Item</h2>
+            <form id="<%=`updateform${item._id}`%>" class="modifyCartForm">
+                <label for="size">Sizes:</label>  
+                  
+                <select id="<%=`allsizes${item._id}`%>" name="size" required> 
+                    <% 
+                        const sizesArray = item.product && item.product.variation 
+                            ? item.product.variation.flatMap(variation => variation.sizes) 
+                            : []; 
+                    %>
+                    
+                    <% if (sizesArray.length === 0) { %>
+                        <option value="" disabled>No sizes available</option>
+                    <% } else { %>
+                        <% sizesArray.forEach((option) => { %>
+                            <option optionprice="<%= option.priceAdjustmentUk %>" value="<%= option.sizeName %>"><%= option.sizeName %></option>
+                        <% }); %>
+                    <% } %>
+                </select>
+                
+    
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="<%=`dquant${item._id}`%>" name="quantity" min="1" value="1" required> 
+                <button class="buttoner" type="submit">Update</button>     
+            </form>
+        </div>
+    </div>  
+    <!---Modify cart end-->
+
+                <% }); %>   
+        <% } else { %>
+            <div class="col-lg-12">
+                <p class="text-center">Your cart is empty.</p>
+            </div>
+        <% } %> 
+      
+    </div>   
+
+    <!-- Cart End --> 
+    
+
+
+          <!-----ERROR AND SUCCESS NOTIFICATION POP UP -->
+          <%- include('../partials/errnotify.ejs') %>  
+          <%- include('../partials/sucnotify.ejs') %> 
+
+
+
+   <% if(carts.length > 0) { %>
+       <!-- Checkout Start -->
+       <div class="container-fluid pt-5 checkout-section"> 
+        <form id="startbilling">
+        <div class="row px-xl-5">
+            <div class="col-lg-8">
+                <div class="mb-4">
+                    <h4 class="font-weight-semi-bold mb-4">Billing Address</h4>
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label>First Name</label>
+                            <input id="fesnm" class="form-control" type="text" placeholder="John" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Last Name</label>
+                            <input id="lasnm" class="form-control" type="text" placeholder="Doe" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>E-mail</label>
+                            <input id="emel" class="form-control" type="email" placeholder="example@email.com" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Mobile No</label>
+                            <input id="mbn" class="form-control" type="text" placeholder="+123 456 789" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>Address Line 1</label>
+                            <input id="adda" apikey="<%=hereApi%>" class="form-control" type="text" placeholder="123 Street" autocomplete="off" required>
+                         </div>  
+                         <div class="col-md-6 form-group"> <p id="sugerr"></p> </div>
+                         <div id="suggestionsContainer">
+                            <!----To be populated with Js from server response-->
+                         </div>
+                        <div class="col-md-6 form-group">
+                            <label>Address Line 2</label>
+                            <input id="addb" class="form-control" type="text" placeholder="no 2 lane 1" autocomplete="off" required>
+                        </div>  
+                       
+                        <div class="col-md-6 form-group">
+                            <label>Country</label>
+                            <select class="custom-select" required>
+                                <option selected>United Kingdom</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>City</label>
+                            <input id="cite" class="form-control" type="text" placeholder="New York" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>State</label>
+                            <input id="stet" class="form-control" type="text" placeholder="New York" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>ZIP Code</label>
+                            <input id="pocod" class="form-control" type="text" placeholder="123" required>
+                        </div> 
+                    </div>
+                </div>  
+            </div> 
+
+
+            <div class="col-lg-4">
+                <div class="card border-secondary mb-5">
+                    <div class="card-header border-0" style="background-color:white">
+                        <h4 class="font-weight-semi-bold m-0">Order Total</h4>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="font-weight-medium mb-3">Products</h5>  
+                        <% var total = 0; %>
+                        <% carts.forEach(item => { %>
+                            <div class="d-flex justify-content-between">
+                                <p><%= item.product.productName %></p>
+                                <p><%= (parseFloat(item.totalprice) * item.quantity).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>£</p>
+                         </div>   
+                            <% total += parseFloat(item.totalprice) * item.quantity %>  
+                        <% }); %>
+                        <hr class="mt-0"> 
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-medium">Shipping</h6>
+                            <h6 class="font-weight-medium">Not included initially</h6>
+                        </div>
+                    </div>
+                    <div class="card-footer border-secondary bg-transparent">
+                        <div class="d-flex justify-content-between mt-2">
+                            <h5 class="font-weight-bold">Total</h5>
+                            <h5 class="font-weight-bold"><%= total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %>£</h5>
+                        </div> <br>
+                        <button id="billbtn" class="place-order-btn">Send Order Request</button>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </form>
+    </div>
+    <!-- Checkout End --> 
+   <% } %>
+ 
+    </div>
+
+
+
+
+
+    <!-- Footer Start -->
+    <%- include('../partials/footer.ejs'); %>
+    <!-- Footer End -->
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="mail/jqBootstrapValidation.min.js"></script>
+    <script src="mail/contact.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>   
+
+
+     <script>  
+
+
+   var modifycart = document.querySelectorAll('.modify-cart');
+   modifycart.forEach((each)=>{   
+      
+   
+   var formattrbt = each.getAttribute('updateform'); 
+   var updateform = document.getElementById(formattrbt);  
+   
+    var mymodal = each.getAttribute('modal-id');
+    var dmodal = document.getElementById(mymodal); 
+ 
+    each.onclick = function() { 
+    dmodal.style.display = 'block';    
+   }  
+ 
+    
+   
+   var closemodal = each.getAttribute('closemodal'); 
+   var closemodalbtn = document.getElementById(closemodal); 
+   closemodalbtn.onclick = function() {   
+   dmodal.style.display = 'none';  
+}   
+ 
+
+   updateform.addEventListener('submit', async (e)=>{  
+      e.preventDefault();   
+      //get the select tag
+   var formselattr = each.getAttribute('data-select'); 
+   var formsel = document.getElementById(formselattr); 
+
+       var selvall = formsel.options[formsel.selectedIndex]; // Get the selected option element
+       var selval = selvall.value;
+        var selvalprix = selvall.getAttribute('optionprice'); // Now you can get the attribute
+
+
+    //get the quantity input box
+   var inpattr = each.getAttribute('data-inp'); 
+   var inpval = document.getElementById(inpattr).value; 
+
+   if(inpval < 1) {
+       alert('Can\'t input less than 1 as quantity');
+       return;
+   }  else {
+    
+       
+      var theitem = each.getAttribute('data-id'); //the id of the cart
+      try{
+            const resp = await fetch(`/modifyingcarti/${theitem}`, {
+                 method : 'post',
+                 body : JSON.stringify({ 
+                      sizename : selval, 
+                      sizeprice : selvalprix,
+                      quantity : inpval,
+                 }), 
+                 headers : {
+                 Accept : 'application/json',
+                 'Content-Type' : 'application/json', 
+                 },
+            });  
+            alert('Modified successfully');  
+            location.reload();
+              if(!resp.ok) {
+                   throw resp;  
+              }
+      }  catch(err) {
+          const error = await err.text();
+          location.reload();
+      } 
+
+}
+
+   });
+
+
+   });  
+
+
+
+    
+  
+  document.querySelectorAll('.remove-btn').forEach(button => {
+                 button.addEventListener('click', async (e) => {
+                     const id = e.target.getAttribute('data-id'); 
+                     const confirmed = confirm('Are you sure you want to perform this action?');
+                     if(!confirmed){return}  
+                     try {
+                         const resp = await fetch(`/delete-cart-item/${id}`, {
+                             method: 'DELETE',
+                             headers: {
+                                 'Content-Type': 'application/json',
+                                 Accept: 'application/json'
+                             }
+                         });
+ 
+                         if (resp.ok) {
+                             alert('Item removed from cart.');
+                             location.reload();
+                         } else {
+                             throw new Error('Failed to delete item');
+                         }
+                     } catch (err) {
+                         alert('An error occurred, please try again.');
+                     }
+                 });
+             }); 
+            
+ 
+
+
+             document.querySelector('#startbilling').addEventListener('submit', async (e) => { 
+                e.preventDefault(); 
+                var billbtn = document.getElementById('billbtn');
+                billbtn.style.opacity = 0.4;
+                billbtn.disabled = true;
+                billbtn.innerHTML = 'Sending..'; 
+
+          
+         var cartItems = [];
+         var allditems = document.querySelectorAll('.allditems'); 
+         allditems.forEach((each)=>{  
+            var cartdetail = JSON.parse( each.getAttribute('cartdetail') );
+            cartItems.push({
+                    productId: each.getAttribute('productId'),
+                    productName: cartdetail.product.productName,
+                    quantity:  cartdetail.quantity,
+                    size:  cartdetail.size,
+                    weight : cartdetail.product.productWeight, 
+                    length : cartdetail.product.productLength,
+                    width : cartdetail.product.productWidth,
+                    height : cartdetail.product.productHeight,
+                    totalPrice:  parseFloat(cartdetail.totalprice) * cartdetail.quantity,
+                });  
+         });
+            
+         console.log(cartItems);
+
+    // Initialize an object to hold order data
+    const orderData =  {
+            firstName: document.querySelector('#fesnm').value,
+            lastName: document.querySelector('#lasnm').value,
+            email: document.querySelector('#emel').value,
+            mobile: document.querySelector('#mbn').value,
+            address1: document.querySelector('#adda').value,
+            address2: document.querySelector('#addb').value,
+            country: document.querySelector('select.custom-select').value,
+            city: document.querySelector('#cite').value,
+            state: document.querySelector('#stet').value,
+            zip: document.querySelector('#pocod').value, 
+            cartDetails : cartItems, 
+        }; 
+
+    try {
+        const response = await fetch('/submit-an-order', {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json', 
+                 Accept : 'application/json',
+            },
+            body: JSON.stringify(orderData),
+        });
+
+        if (!response.ok) {    
+            throw response;
+        }      
+          
+        billbtn.innerHTML = 'Submitted';  
+        billbtn.style.opacity = 4; 
+        billbtn.disabled = false;
+    const notification = document.getElementById('notificationz');
+    notification.classList.remove('hidden');
+    
+    setTimeout(() => {
+        notification.classList.add('hidden'); 
+        location.reload()
+    }, 20000); // Automatically hides after 20 seconds
+ 
+document.getElementById('close-btnz').addEventListener('click', function() {
+    const notification = document.getElementById('notificationz');
+    notification.classList.add('hidden'); 
+    location.reload();
+});
+ 
+    } catch (err) {
+       const error = await err.text(); 
+       billbtn.innerHTML = 'Send Order Request';  
+       billbtn.style.opacity = 2;
+       billbtn.disabled = false;
+       const notification = document.getElementById('error-notification');
+    const errorMessage = document.getElementById('error-message');
+    
+    errorMessage.textContent = error; // Set the error message
+    notification.style.display = 'block'; // Show the notification
+
+    // Automatically hide the notification after 15 seconds
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 7000);
+    }
+});  
+
+  
+
+document.getElementById('cancel-button').addEventListener('click', () => {
+    document.getElementById('error-notification').style.display = 'none';
+});  
+
+document.getElementById('scancel-button').addEventListener('click', () => {
+    document.getElementById('success-notification').style.display = 'none';
+}); 
+
+     </script>
+</body>
+
+</html>

@@ -1,0 +1,57 @@
+<div style="z-index:5; position:fixed; top:0; left:0; right:0; background-color:white;" class="container-fluid"  id="topbar">
+    <div style="background-color:white" class="row py-2 px-xl-5"> 
+        <div class="col-lg-6 text-center text-lg-right">
+            <div class="d-inline-flex align-items-center">
+                <a style="font-size:20px;" class="text-dark px-2" href="">
+                    <i  class="fab fa-facebook-f"></i>
+                </a>  
+                <a  style="font-size:20px" class="text-dark px-2" href="">
+                    <i class="fab fa-instagram"></i>
+                </a> 
+            </div>
+        </div>
+    </div> 
+
+
+    <div class="row align-items-center py-3 px-xl-5">
+        <div class="col-lg-3 d-none d-lg-block">
+            <a href="/" class="text-decoration-none">
+                <h1 style="font-family: 'Orbitron', sans-serif; font-style: normal; font-size:23px; margin-top:5px" class="m-0 display-5 font-weight-semi-bold">UNIQUE FASHION</h1>
+            </a>
+        </div> 
+
+        <div class="col-lg-6 col-6 text-left">
+            <form id="searchproduct">
+                <div class="input-group">  
+                    <input type="text" class="form-control" placeholder="Search for products">
+                    <div class="input-group-append">
+                        <span class="input-group-text bg-transparent text-primary">
+                            <i style="padding-left:4px; padding-right:4px; padding-top:4px; padding-bottom:4px; background-color:#008080; color:#fff" class="fa fa-search"></i>
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div> 
+
+        <div class="col-lg-3 col-6 text-right">
+            <a href="/wishlist" class="btn border">  
+                <% if(user){ %>  
+              <i style="color:#008080;" class="fas fa-heart" id="wishl"></i>  
+              <span class="badge" id="wishlp"><%=mwl%></span>
+                <% } else { %> 
+                <i style="color:#008080;" class="fas fa-heart"></i>  
+                <span class="badge">0</span>
+                 <% } %> 
+            </a>
+            <a href="/carts" class="btn border">   
+                         <% if(user){ %>  
+                    <i style="color:#008080;" class="fas fa-shopping-cart" id="ucart"></i>
+                    <span class="badge" id="cartlp"><%=mct%></span> 
+                      <% } else { %> 
+                        <i style="color:#008080;" class="fas fa-shopping-cart" id="ucart"></i>
+                        <span class="badge">0</span> 
+                       <% } %>  
+              </a>
+        </div>
+    </div>
+</div>  <br><br><br><br>

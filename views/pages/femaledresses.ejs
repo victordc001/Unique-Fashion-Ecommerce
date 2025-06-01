@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en"> 
+    
+    <head> 
+        <%- include('../partials/head.ejs') %>    
+
+        <meta property="og:title" content="Stylish Female Dresses: Elevate Your Wardrobe Today">
+
+        <style>   
+
+          /* Skeleton loader styles */
+          .skeleton {
+    background: #e0e0e0;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden; 
+    display: flex; 
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    margin: auto; /* Center the element within its container */
+}
+
+.skeleton::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(0,0,0,0.1) 25%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.1) 75%);
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* Skeleton card styles */
+.skeleton-card {
+    width: 100%; 
+    margin: 10px auto; /* Center the card and add margin */
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the content horizontally */
+}
+
+.skeleton-img {
+    height: 240px;
+    width: 100%; /* Ensure the image fills the card width */
+    background: #ddd;
+    margin-bottom: 10px;
+}
+
+.skeleton-text, .skeleton-price {
+    width: 70%; /* Adjust width as needed */
+    background: #ddd;
+    margin-bottom: 10px;
+}
+
+.skeleton-text {
+    height: 20px;
+}
+
+.skeleton-price {
+    height: 15px;
+    width: 50%; /* Adjust width as needed */
+}
+
+
+
+            
+            .griddo{
+                  display:grid;
+                  grid-row-gap:40px;
+                  grid-column-gap:40px;
+                  grid-template-columns:repeat(auto-fit, minmax(200px, 3fr));
+                  min-width:100px;
+                  margin-left:10px;
+                  margin-right:10px;
+                  padding-left:10px;
+                  padding-right:10px;
+            }  
+
+               
+ 
+.paginatio {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.paginatio-btn {
+    background-color: #008080;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
+
+.paginatio-btn:hover {
+    background-color: #006666;
+}
+
+.page-info {
+    margin: 0 20px;
+    font-size: 16px;
+    color: #008080;
+}
+
+.page-info span {
+    font-weight: bold;
+}
+
+.paginatio-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}  
+
+.sorting{
+     display:flex;
+     justify-content:center;  
+     margin-bottom:20px;
+} 
+
+.sorting label {
+      font-family:'Poppins', sans-serif;
+      margin-right:8px;
+      margin-top:7px;
+}
+
+          </style>
+    </head>
+
+<body>
+   
+      <%- include('../partials/topbar.ejs') %> 
+
+               <!-----ERROR AND SUCCESS NOTIFICATION POP UP -->
+               <%- include('../partials/errnotify.ejs') %>  
+               <%- include('../partials/sucnotify.ejs') %> 
+
+
+          <br>
+              <!-- Page Header Start -->
+              <div class="container-fluid mb-5 headerimg">
+                <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+                    <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color:white">FEMALE WEARS</h1>
+                    <div class="d-inline-flex">
+                        <p class="m-0"><a style="color:#fff; font-weight:bold; font-size:18px;" href="/">Home</a></p>
+                        <p  class="m-0 px-2">-</p>
+                        <p style="color:white; font-size:18px;" class="m-0">Products</p>
+                    </div>
+                </div>
+            </div> <br><br>
+            <!-- Page Header End -->     
+
+
+               <!--Hide a login form here initially for non authenticated users-->
+
+     <div id="hiddenlf" style="display:none">  
+        <%- include('../partials/loginfirst.ejs') %>
+    </div>
+ 
+    <% if(prods.length > 0) { %> 
+              <div class="sorting">
+                <label for="sort">Filter by:</label>
+                <select id="sortprod" name="sort">
+                  <option value="priceasc">Price: Low to High</option>
+                  <option value="pricedesc">Price: High to Low</option> 
+                  <option value="dateadded">Date Added</option>
+                </select> 
+              </div>   
+            <% } %>
+              
+              <% if(user) { %>
+              <div id="storeuser" style="display:none" theuser = '<%=user%>'>
+                 </div> 
+              <% } %>  
+
+              <div style="display:none" id="storelength" prodlength = '<%=prods.length%>'></div> 
+ 
+   
+                    <div id="prdi" class="griddo"> 
+                        <% if(prods.length > 0) { %> 
+                        <% prods.forEach(each=>{ %> 
+                        <div class="card product-item border-0">
+                            <div style="height:240px" class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                            <!--Calculate a random index based on the length of the productImage array-->
+                               <% const randomIndex = Math.floor(Math.random() * each.productImage.length); %>
+                               <% const randomImage = each.productImage[randomIndex]; %>
+                                <img style="object-fit:cover;" class="img-fluid w-100" src='<%=`/${randomImage.path}`%>' alt="">
+                            </div>
+                            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                <h6 class="text-truncate mb-3"><%=each.productName%></h6>
+                                <div style="border:1px dotted black; padding-top:5px; margin-left:10px; margin-right:10px" class="d-flex justify-content-center">
+                                    <h6><%=each.priceuk%></h6>
+                                </div>
+                            </div>
+                            <div style="background-color:#008080;" class="card-footer d-flex justify-content-between border">
+                                <a href="/collections/<%=each.category%>/<%=each.productName%>/<%=each._id%>" style="color:#fff" class="btn-sm p-0"><i style="color:#fff" class="fas fa-eye mr-1"></i>View Detail</a>
+                                <% if(user) { %>  
+                                    <i class="fa fa-heart wishlisticonforauthenticated" productId = '<%=each._id%>' style="color:white; cursor:pointer; border-radius:50px; font-size:20px"></i>
+                                 <% } else { %>  
+                                   <i class="fa fa-heart ordinarywishlisticon" style="color:white; cursor:pointer; border-radius:50px; font-size:20px"></i>
+                                  <% } %>
+                                  <button style="color:#fff; background:none; border:none" productId = '<%=each._id%>' class="btn-sm p-0 atc"><i style="color:#fff" class="fas fa-shopping-cart mr-1"></i>Add To Cart</button>
+                             </div>  
+                            <% if(user && user.role == 'admin'){ %> 
+                            <div style="background-color:#008080;" class="card-footer d-flex justify-content-between border">
+                                <a href="/admin-control/collections/<%=each.productName%>/<%=each._id%>" style="color:#fff" class="btn-sm p-0"><i style="color:#fff" class="fas fa-eye mr-1"></i>Edit Product</a>
+                                <a href="/" style="color:#fff" productId = '<%=each._id%>' class="delprod btn-sm p-0"><i style="color:#fff" class="fas fa-shopping-cart mr-1"></i>Delete Product</a>
+                            </div>  
+                        <% } %>
+                        </div>    
+                    <% }); %>  
+                     <!------PAGINATION---- 
+                     <div class="paginatio">
+                        <button id="prevBtn" class="paginatio-btn">
+                            <i class="fa fa-chevron-left"></i>
+                        </button>
+                        <span class="page-info">Page <span id="currentPage">1</span> of <span id="totalPages">10</span></span>
+                        <button id="nextBtn" class="paginatio-btn">
+                            <i class="fa fa-chevron-right"></i>
+                        </button>
+                    </div>  
+                        ---PAGINATION END----> 
+                   <% } else { %>
+                         <p style="font-weight:bold; text-align:center; font-size:25px">No female dresses available yet, Please come back later 😊</p>
+                  <% } %>
+                        </div>
+                    
+ 
+                       
+
+            <!-- Shop Product End -->
+      
+    <!-- Footer Start --> 
+        <%- include('../partials/footer.ejs') %>   
+    <!-- Footer End -->
+
+ 
+
+    
+  
+    <script> 
+ 
+          var delprod = document.querySelectorAll('.delprod'); 
+          for(i = 0; i<delprod.length; i++) {  
+          delprod[i].addEventListener('click', async (a)=>{
+             a.preventDefault(); 
+             var conf = confirm('Are you sure you want to delete this product?');
+             if(conf){   
+                var productid = a.target.getAttribute('productId');  
+                try{
+                 const deleted = await fetch(`/deletingprod/${productid}`, {
+                     method : 'delete',
+                 });   
+                 if(!deleted.ok){
+                     throw deleted;
+                 }
+                 alert('Product deleted successfully'); 
+                 location.reload();
+                }  catch(err) {
+                      var error = await err.text(); 
+                      alert(error);  
+                }
+             }  else {
+                  return;
+             }
+          }); 
+        }    
+
+
+           
+           //Wishlist adding for NONauthenticated users
+           var nonwlic = document.querySelectorAll('.ordinarywishlisticon'); 
+            nonwlic.forEach((each)=>{
+                each.onclick = ()=>{
+                    var loginform = document.getElementById('hiddenlf');
+                    loginform.style.display = 'block';
+                }  
+            });
+
+            //Wishlist adding for authenticated users
+            var wlic = document.querySelectorAll('.wishlisticonforauthenticated'); 
+            wlic.forEach((each)=>{  
+                each.addEventListener('click', async (e)=>{
+              e.preventDefault(); 
+             var elemId = each.getAttribute('productId');  
+             var dat = {
+                 prodId : elemId,
+             } 
+
+             try{
+          const result = await fetch('/addwishlist', {
+                   method : 'post',
+                   body : JSON.stringify(dat),
+                   headers : {
+                      'Content-Type' : 'application/json',
+                      Accept : 'application/json',
+                   },
+          });  
+          if(!result.ok) {
+             throw result; 
+          }   
+          
+          //response from backend
+         const resp = await result.json(); 
+         const lengthh = resp.mwl;
+         
+  //get the wishlist icon and span with topbar for quick display to the user that wishlist added  
+  var wi = document.getElementById('wishl');
+  var wip = document.getElementById('wishlp'); 
+  var tp = document.getElementById('topbar');  
+ 
+  wip.innerHTML = lengthh;   
+
+    //Display success message  
+    const snotification = document.getElementById('success-notification');
+    const successMessage = document.getElementById('success-message');
+    
+    successMessage.textContent = 'Wishlist added successfully, view full details in dashboard';  
+    snotification.style.display = 'block'; // Show the notification
+
+    // Automatically hide the notification after 7 seconds
+    setTimeout(() => {
+        snotification.style.display = 'none';
+    }, 7000); 
+ 
+
+        } catch(err) {
+             const error = await err.text();
+             const notification = document.getElementById('error-notification');
+    const errorMessage = document.getElementById('error-message');
+    
+    errorMessage.textContent = error; // Set the error message
+    notification.style.display = 'block'; // Show the notification
+
+    // Automatically hide the notification after 15 seconds
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 7000); 
+             return;
+        }
+            }); 
+            });      
+ 
+
+
+      //Add to cart action for users 
+            //cart adding for authenticated users
+            var atc = document.querySelectorAll('.atc'); 
+            atc.forEach((each)=>{  
+                each.addEventListener('click', async (e)=>{ 
+             var elemId = each.getAttribute('productId');  
+             var dat = {
+                 prodId : elemId,
+             } 
+
+             try{
+          const result = await fetch('/addingtocart', {
+                   method : 'post',
+                   body : JSON.stringify(dat),
+                   headers : {
+                      'Content-Type' : 'application/json',
+                      Accept : 'application/json',
+                   },
+          });  
+          if(!result.ok) {
+             throw result; 
+          }   
+          
+          //response from backend
+         const resp = await result.json(); 
+         const lengthh = resp.mwl;
+         
+  //get the cart icon and span with topbar for quick display to the user that wishlist added  
+  var wi = document.getElementById('ucart');
+  var wip = document.getElementById('cartlp'); 
+  var tp = document.getElementById('topbar');  
+ 
+  wip.innerHTML = lengthh;   
+
+         //Display success message  
+         const snotification = document.getElementById('success-notification');
+    const successMessage = document.getElementById('success-message');
+    
+    successMessage.textContent = 'Cart added successfully, view full details in dashboard'; 
+    snotification.style.display = 'block'; // Show the notification
+
+    // Automatically hide the notification after 7 seconds
+    setTimeout(() => {
+        snotification.style.display = 'none';
+    }, 7000); 
+
+  
+
+        } catch(err) {
+             const error = await err.text();
+             if(error.trim() == 'This action is only for authenticated users'.trim()) {
+                var loginform = document.getElementById('hiddenlf');
+                loginform.style.display = 'block';
+             } else {
+                const notification = document.getElementById('error-notification');
+    const errorMessage = document.getElementById('error-message');
+    
+    errorMessage.textContent = error; // Set the error message
+    notification.style.display = 'block'; // Show the notification
+
+    // Automatically hide the notification after 15 seconds
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 7000);
+             }
+             return;
+        }
+            }); 
+            });  
+             
+        
+ 
+
+ 
+
+
+            //SORTING PRODUCT
+            document.addEventListener('DOMContentLoaded', () => {
+    var sorting = document.getElementById('sortprod');
+    sorting.onchange = async function (e) {   
+        var prd = document.getElementById('prdi');
+      
+        var storelength = document.getElementById('storelength').getAttribute('prodlength');
+        const skeletonHtml = `
+        <div class="skeleton skeleton-card">
+            <div class="skeleton-img"></div>
+            <div class="skeleton-text"></div>
+            <div class="skeleton-price"></div>
+        </div> 
+    `; 
+
+    const skeletons = skeletonHtml.repeat(storelength);
+    
+    prd.innerHTML = skeletons; // Show skeleton loader 
+
+        var storeUserElement = document.getElementById('storeuser');
+        var user = null;
+
+        if (storeUserElement) {
+            var user = storeUserElement.getAttribute('theuser'); 
+        }
+
+        var sortval = e.target.value;
+
+        try {
+            const ress = await fetch(`/sortingfemale/${sortval}`, {
+                method: 'get',
+            });
+
+            if (!ress.ok) {
+                throw ress;
+            }
+
+            var response = await ress.json();
+            var responsedata = response.result;
+
+            // Build the HTML string
+            var html = '<div class="griddo">';
+            responsedata.forEach(function (each) {
+                var randomIndex = Math.floor(Math.random() * each.productImage.length);
+                var randomImage = each.productImage[randomIndex];
+
+                html += '<div class="card product-item border-0">' +
+                    '<div style="height:240px" class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">' +
+                    '<img style="object-fit:cover;" class="img-fluid w-100" src="/' + randomImage.path + '" alt="">' +
+                    '</div>' +
+                    '<div class="card-body border-left border-right text-center p-0 pt-4 pb-3">' +
+                    '<h6 class="text-truncate mb-3">' + each.productName + '</h6>' +
+                    '<div style="border:1px dotted black; padding-top:5px; margin-left:10px; margin-right:10px" class="d-flex justify-content-center">' +
+                    '<h6>' + each.priceuk + '</h6>' +
+                    '</div>' +
+                    '</div>' +
+                    '<div style="background-color:#008080;" class="card-footer d-flex justify-content-between border">' +
+                    '<a href="/collections/' + each.category + '/' + each.productName + '/' + each._id + '" style="color:#fff" class="btn-sm p-0">' +
+                    '<i style="color:#fff" class="fas fa-eye mr-1"></i>View Detail' +
+                    '</a>';
+
+                if (user) {
+                    html += '<i class="fa fa-heart wishlisticonforauthenticated" productId="' + each._id + '" style="color:white; cursor:pointer; border-radius:50px; font-size:20px"></i>';
+                    if (user.role === 'admin') {
+                        html += '<a href="/admin-control/collections/' + each.productName + '/' + each._id + '" style="color:#fff" class="btn-sm p-0">' +
+                            '<i style="color:#fff" class="fas fa-eye mr-1"></i>Edit Product' +
+                            '</a>' +
+                            '<a href="/" style="color:#fff" productId="' + each._id + '" class="delprod btn-sm p-0">' +
+                            '<i style="color:#fff" class="fas fa-shopping-cart mr-1"></i>Delete Product' +
+                            '</a>';
+                    }
+                } else {
+                    html += '<i class="fa fa-heart ordinarywishlisticon" style="color:white; cursor:pointer; border-radius:50px; font-size:20px"></i>';
+                }
+
+                html += '<button style="color:#fff; background:none; border:none" productId="' + each._id + '" class="btn-sm p-0 atc">' +
+                    '<i style="color:#fff" class="fas fa-shopping-cart mr-1"></i>Add To Cart' +
+                    '</button>' +
+                    '</div>' +
+                    '</div>';
+            });
+            html += '</div>';   
+
+
+            
+                 // Check if all images are loaded before hiding the skeleton loader
+const imageUrls = responsedata.flatMap(product => product.productImage); 
+let imagecount = 0;
+
+if (imageUrls.length === 0) {
+    // If there are no images, hide the loader and proceed immediately
+    prd.innerHTML = html;
+    attachlistenerr();
+} else {
+    imageUrls.forEach((url) => {
+        const img = new Image();
+        img.src = url;
+        img.onload = () => {
+            imagecount++; 
+            if (imagecount === imageUrls.length) {
+                // All images are loaded
+                setTimeout(() => {
+                    prd.innerHTML = html;
+                    attachlistenerr();
+                }, 3000);
+            }
+        };  
+        
+        img.onerror = () => {
+            // Increment the count for failed images to ensure completion
+            imagecount++;
+            if (imagecount === imageUrls.length) {
+                // All images processed (including failed ones)
+                setTimeout(() => {
+                    prd.innerHTML = html;
+                    attachlistenerr();
+                }, 3000);
+            }
+        };
+    });
+}
+
+                         
+ 
+        } catch (err) {
+            console.error('Error fetching data:', err);
+            alert('An error occurred while fetching the data.'); 
+        }
+    };
+}); 
+
+
+
+  function attachlistenerr() {
+    var delprod = document.querySelectorAll('.delprod'); 
+          for(i = 0; i<delprod.length; i++) {  
+          delprod[i].addEventListener('click', async (a)=>{
+             a.preventDefault(); 
+             var conf = confirm('Are you sure you want to delete this product?');
+             if(conf){   
+                var productid = a.target.getAttribute('productId');  
+                try{
+                 const deleted = await fetch(`/deletingprod/${productid}`, {
+                     method : 'delete',
+                 });   
+                 if(!deleted.ok){
+                     throw deleted;
+                 }
+                 alert('Product deleted successfully'); 
+                 location.reload();
+                }  catch(err) {
+                      var error = await err.text(); 
+                      alert(error);  
+                }
+             }  else {
+                  return;
+             }
+          }); 
+        }    
+
+
+           
+           //Wishlist adding for NONauthenticated users
+           var nonwlic = document.querySelectorAll('.ordinarywishlisticon'); 
+            nonwlic.forEach((each)=>{
+                each.onclick = ()=>{
+                    var loginform = document.getElementById('hiddenlf');
+                    loginform.style.display = 'block';
+                }  
+            });
+
+            //Wishlist adding for authenticated users
+            var wlic = document.querySelectorAll('.wishlisticonforauthenticated'); 
+            wlic.forEach((each)=>{  
+                each.addEventListener('click', async (e)=>{
+              e.preventDefault(); 
+             var elemId = each.getAttribute('productId');  
+             var dat = {
+                 prodId : elemId,
+             } 
+
+             try{
+          const result = await fetch('/addwishlist', {
+                   method : 'post',
+                   body : JSON.stringify(dat),
+                   headers : {
+                      'Content-Type' : 'application/json',
+                      Accept : 'application/json',
+                   },
+          });  
+          if(!result.ok) {
+             throw result; 
+          }   
+          
+          //response from backend
+         const resp = await result.json(); 
+         const lengthh = resp.mwl;
+         
+  //get the wishlist icon and span with topbar for quick display to the user that wishlist added  
+  var wi = document.getElementById('wishl');
+  var wip = document.getElementById('wishlp'); 
+  var tp = document.getElementById('topbar');  
+ 
+  wip.innerHTML = lengthh;  
+  
+         //Display success message  
+  const snotification = document.getElementById('success-notification');
+    const successMessage = document.getElementById('success-message');
+    
+    successMessage.textContent = 'Wishlist added successfully, view full details in dashboard';  
+    snotification.style.display = 'block'; // Show the notification
+
+    // Automatically hide the notification after 7 seconds
+    setTimeout(() => {
+        snotification.style.display = 'none';
+    }, 7000);
+ 
+ 
+        } catch(err) {
+             const error = await err.text();
+             const notification = document.getElementById('error-notification');
+    const errorMessage = document.getElementById('error-message');
+    
+    errorMessage.textContent = error; // Set the error message
+    notification.style.display = 'block'; // Show the notification
+
+    // Automatically hide the notification after 15 seconds
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 7000);
+             return;
+        }
+            }); 
+            });      
+ 
+
+
+      //Add to cart action for users 
+            //cart adding for authenticated users
+            var atc = document.querySelectorAll('.atc'); 
+            atc.forEach((each)=>{  
+                each.addEventListener('click', async (e)=>{ 
+             var elemId = each.getAttribute('productId');  
+             var dat = {
+                 prodId : elemId,
+             } 
+
+             try{
+          const result = await fetch('/addingtocart', {
+                   method : 'post',
+                   body : JSON.stringify(dat),
+                   headers : {
+                      'Content-Type' : 'application/json',
+                      Accept : 'application/json',
+                   },
+          });  
+          if(!result.ok) {
+             throw result; 
+          }   
+          
+          //response from backend
+         const resp = await result.json(); 
+         const lengthh = resp.mwl;
+         
+  //get the cart icon and span with topbar for quick display to the user that wishlist added  
+  var wi = document.getElementById('ucart');
+  var wip = document.getElementById('cartlp'); 
+  var tp = document.getElementById('topbar');  
+ 
+  wip.innerHTML = lengthh;   
+
+      //Display success message  
+      const snotification = document.getElementById('success-notification');
+    const successMessage = document.getElementById('success-message');
+    
+    successMessage.textContent = 'Cart added successfully, view full details in dashboard'; 
+    snotification.style.display = 'block'; // Show the notification
+
+    // Automatically hide the notification after 7 seconds
+    setTimeout(() => {
+        snotification.style.display = 'none';
+    }, 7000); 
+
+  
+
+        } catch(err) {
+             const error = await err.text();
+             if(error.trim() == 'This action is only for authenticated users'.trim()) {
+                var loginform = document.getElementById('hiddenlf');
+                loginform.style.display = 'block';
+             } else {
+                const notification = document.getElementById('error-notification');
+    const errorMessage = document.getElementById('error-message');
+    
+    errorMessage.textContent = error; // Set the error message
+    notification.style.display = 'block'; // Show the notification
+
+    // Automatically hide the notification after 15 seconds
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 7000);
+             }
+             return;
+        }
+            }); 
+            });
+             
+  } 
+
+
+  document.getElementById('cancel-button').addEventListener('click', () => {
+    document.getElementById('error-notification').style.display = 'none';
+});  
+
+document.getElementById('scancel-button').addEventListener('click', () => {
+    document.getElementById('success-notification').style.display = 'none';
+}); 
+
+
+    </script>  
+ 
+
+
+ <script src="js/main.js"></script>
+ 
+  
+</body>
+
+</html>

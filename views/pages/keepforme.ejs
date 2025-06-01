@@ -1,0 +1,85 @@
+ 
+
+      var theFirstAd = document.getElementById('adda');
+
+      theFirstAd.addEventListener('input', async (e) => {
+          e.preventDefault();
+          
+          const suggestionsContainer = document.getElementById('suggestionsContainer');
+          var hereApi = e.target.getAttribute('apikey');
+          var queryHere = e.target.value;
+      
+          // Ensure query length is sufficient for autocomplete
+          if (queryHere.length >= 4) { 
+              var autocompleteUrl = `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${encodeURIComponent(queryHere)}&apiKey=${hereApi}`;
+              
+              try {
+                  // Fetch suggestions from the HERE API
+                  const respSug = await fetch(autocompleteUrl, { method: 'GET' });
+                  if (!respSug.ok) {
+                      throw respSug; 
+                  }
+                  const result = await respSug.json(); 
+                  suggestionsContainer.innerHTML = ''; // Clear previous suggestions 
+       
+                   if (result.items.length <= 0) {   
+                      var sugerr = document.getElementById('sugerr');  
+                      sugerr.innerHTML = 'No results found.';  
+                      sugerr.style.color = 'red';  
+                      sugerr.style.textAlign = 'center'; 
+                      sugerr.style.fontSize = '15px';
+                      sugerr.style.fontWeight = 'bold';  
+                  } else {    
+                      var sugerr = document.getElementById('sugerr');
+                      sugerr.innerHTML = '';      
+                      result.items.forEach(item => { 
+                          const suggestionDiv = document.createElement('div');
+                          suggestionDiv.className = 'suggestion-item'; // Add a class for styling
+      
+                          // Extract address details
+                          const street = item.address.street ? item.address.street + ',' : ''; 
+                          const city = item.address.city ? item.address.city : ''; 
+                          const state = item.address.state ? item.address.state : ''; 
+                          const country = item.address.countryName ? item.address.countryName : ''; 
+      
+                          suggestionDiv.innerHTML = `${street} ${city}, ${state}, ${country}`;
+                          
+                          // Store city and state in the suggestionDiv's dataset
+                          suggestionDiv.dataset.city = city;
+                          suggestionDiv.dataset.state = state;
+      
+                          // Add click event to select the suggestion
+                          suggestionDiv.addEventListener('click', () => { 
+                               theFirstAd.value = suggestionDiv.textContent.trim(); // Set the input value
+                              suggestionsContainer.innerHTML = ''; // Clear suggestions after selection 
+                              // Clear the error string as the user clicked something valid
+                              var sugerr = document.getElementById('sugerr'); 
+                              sugerr.innerHTML = ''; 
+                          });  
+      
+                          // Append to suggestions container
+                          suggestionsContainer.appendChild(suggestionDiv);
+                      }); 
+                  }
+      
+              } catch (err) {   
+                  var sugerr = document.getElementById('sugerr');
+                  sugerr.innerHTML = 'an error occured';  
+                  sugerr.style.color = 'red';
+                  sugerr.style.textAlign = 'center'; 
+                  sugerr.style.fontSize = '14px';
+                  sugerr.style.fontWeight = 'bold';  
+                  console.log(err);
+              } 
+          }
+      });
+      
+      // Clear suggestions when you click outside the suggestion div
+      window.onclick = function(event) {
+          const suggestionsContainer = document.getElementById('suggestionsContainer'); 
+          if (event.target !== theFirstAd) { // Only clear if clicking outside the input
+              suggestionsContainer.innerHTML = ''; 
+          }
+      };
+      
+      

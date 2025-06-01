@@ -1,0 +1,242 @@
+ 
+ 
+
+ 
+<!DOCTYPE html>
+<html>
+    <head>
+         <%- include('../partials/head.ejs') %>  
+         <meta property="og:title" content="Member Login: Access Your Account Securely">
+
+         <title>Login</title> 
+
+         <style>
+
+           .errlogin{
+            font-family:'Poppins', sans-serif;  
+            color:black;
+          }  
+  
+           
+
+          .loginf{
+             min-width:100px;
+             margin-left:20px;
+             margin-right:20px;
+             padding-left:20px;
+             padding-right:20px;
+             margin-top:40px;    
+          }   
+
+          .loginf .forpc{
+             width:60%; 
+             color:#212121;
+             text-align:center;
+             border-radius:50px; 
+          }    
+
+          .loginf .forpc i{ 
+            font-weight:bold;
+             font-size:70px; 
+             margin-top:60px;
+          }
+          
+          
+          .loginf .secondandr{
+              width:100%; 
+              text-align:center;
+          }    
+
+          .loginf .secondandr i{
+              font-size:35px;
+          } 
+
+          .loginf .secondandr p{
+             margin-top:10px;
+             font-size:20px;
+             margin-bottom:7px;
+          }
+          
+          .loginf .secondandr input{
+             width:100%;
+             border:1px solid grey;
+             margin-bottom:10px;
+             padding:13px;
+          } 
+ 
+          .loginf .secondandr button{
+               padding:15px;
+               border:none;
+               border-radius:5px; 
+               color:white;
+               background-color:#008080;
+               margin-bottom:13px;
+               width:100%;
+          } 
+      
+           
+          @media only screen and (min-width:601px) {
+               .loginf{
+                display:flex;
+                justify-content:space-between; 
+                margin-right:40px;
+               }  
+                
+               .secondandr i{
+                     display:none;
+               }  
+          }
+
+          @media only screen and (max-width:600px) {
+               .forpc{
+                 display:none;
+               }    
+ 
+          }
+         </style>
+
+    </head>
+
+     <body> 
+     
+    <!-- Topbar Start -->
+    <%- include('../partials/topbar.ejs') %>
+  <!-- Topbar End --> 
+
+      <!-----ERROR AND SUCCESS NOTIFICATION POP UP -->
+      <%- include('../partials/errnotify.ejs') %>  
+      <%- include('../partials/sucnotify.ejs') %> 
+
+
+              <!-- Page Header Start -->
+    <div class="container-fluid mb-5 headerimg">
+      <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+          <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color:white">WELCOME BACK</h1>
+          <div class="d-inline-flex">
+              <p class="m-0"><a style="color:#fff; font-weight:bold; font-size:18px;" href="/">Home</a></p>
+              <p  class="m-0 px-2">-</p>
+              <p style="color:white; font-size:18px;" class="m-0">Login</p>
+          </div>
+      </div>
+  </div>
+  <!-- Page Header End -->
+ 
+           
+      <form id="leggo">  
+         <div class="loginf">    
+          
+              <div class="forpc"> 
+                <i class="fa fa-user"></i> 
+              </div>  
+
+              <div class="secondandr">  
+              <input id="logme" type="email" placeholder="Email" required>  
+              <input id="logpass" type="password" placeholder="Password" required>
+              <p id="errlogin"></p>
+              <button id="mlog">Log In</button>
+              <div class="forgotandcreate"> 
+                <a style="color:black" href='/signup'>Don't have an account?</a>
+                <br>
+                <a style="color:black" href="/reset-password">Forgot password?</a> 
+              </div>  
+             
+              </div> 
+ 
+         </div>    
+         
+        </form> 
+
+         <%- include('../partials/footer.ejs') %> 
+         
+          <script>   
+
+
+var leggo = document.getElementById('leggo');
+leggo.addEventListener('submit', async (p)=>{
+     p.preventDefault();
+                
+
+                    let logme = document.getElementById('logme'); 
+                    let logpass = document.getElementById('logpass');
+                    let mlog = document.getElementById('mlog');
+                    let loginerror = document.getElementById('errlogin');
+                    mlog.innerHTML = 'Processing';
+                    mlog.style.opacity = '0.855';
+                    mlog.disabled = true;
+
+                    const logindata = {
+                      regemail : logme.value,
+                      regpass : logpass.value, 
+                    } 
+ 
+                    
+                 try{
+                    const response = await fetch('/logino', {
+                        method : 'post',
+                        body : JSON.stringify(logindata),
+                        headers : {
+                           'Content-Type' : 'application/json',
+                            Accept : 'application/json',
+                        },
+                    });
+                    
+                    if(!response.ok){
+                      mlog.innerHTML = 'Log In';
+                        throw response;
+                    } 
+
+                    mlog.style.opacity = '1';
+                    const result = await response.json();
+                    loginerror.innerHTML = 'Login success'; 
+                    loginerror.style.color = 'black';
+                    loginerror.style.marginTop = '10px';
+                    loginerror.style.fontSize = '16px';  
+                    mlog.disabled = false;
+
+                       
+                    setTimeout( ()=> {
+                      loginerror.innerHTML = 'waiting for redirect..'; 
+                 }, 1000);
+
+                    setTimeout( ()=> {
+                   window.location.assign(`/verification/${logme.value}`); 
+                 }, 3000);
+
+                }
+
+
+                  catch(error){  
+                    mlog.disabled = false;
+                    const errresult = await error.text();  
+                      
+                  const notification = document.getElementById('error-notification');
+    const errorMessage = document.getElementById('error-message');
+    
+    errorMessage.textContent = errresult; // Set the error message
+    notification.style.display = 'block'; // Show the notification
+
+    // Automatically hide the notification after 15 seconds
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 7000); 
+                  }  
+                   
+           });       
+
+        
+    
+           document.getElementById('cancel-button').addEventListener('click', () => {
+    document.getElementById('error-notification').style.display = 'none';
+});  
+
+document.getElementById('scancel-button').addEventListener('click', () => {
+    document.getElementById('success-notification').style.display = 'none';
+}); 
+
+ 
+
+ 
+          </script>
+
+        </body>
+</html>

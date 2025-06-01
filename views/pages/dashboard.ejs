@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+    <%- include('../partials/head.ejs') %>  
+     <title>Membership Dashboard</title>  
+
+     <meta property="og:title" content="Dashboard: Your Control Center for Insights and Management">
+
+       <style>  
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4; 
+        }
+
+        .dashboard-container {
+            min-width: 60px;
+            padding-left:20px;
+            padding-right:20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .carda{
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .carda:hover {
+            transform: translateY(-5px);
+        }
+
+        .carda h3 {
+            color: #008080;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .carda p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .carda i {
+            font-size: 50px;
+            color: #008080;
+            margin-bottom: 20px;
+        }
+ 
+
+        .btna{
+            display: inline-block;
+            background-color: #008080;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        } 
+
+        .btna:hover {
+            background-color: #006666;
+            color:white;
+            text-decoration:none;
+        }  
+
+    </style>
+</head>
+<body> 
+
+    <%- include('../partials/topbar.ejs') %>  
+
+       <!-- Page Header Start -->
+       <div class="container-fluid mb-5 headerimg">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color:white">MY DASHBOARD</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a style="color:#fff; font-weight:bold; font-size:18px;" href="/">Home</a></p>
+                <p  class="m-0 px-2">-</p>
+                <p style="color:white; font-size:18px;" class="m-0">Dashboard</p>
+            </div>
+        </div>
+    </div> <br><br>
+    <!-- Page Header End -->
+
+
+<div class="dashboard-container">
+    <div class="carda">
+        <i class="fas fa-user"></i>
+        <h3>Profile</h3>
+        <p>Manage your personal information and update your profile details.</p>
+        <a href="/updateprofile" class="btna">Update Profile</a>
+    </div>
+    <div class="carda">
+        <i class="fas fa-key"></i>
+        <h3>Security</h3>
+        <p>Change your password and review your security settings.</p>
+        <a href="/updatesecurity" class="btna">Update Security</a>
+    </div>
+    <div class="carda">
+        <i class="fas fa-heart"></i>
+        <h3>Wishlist</h3>
+        <p>Modify your wishlist items before adding them to the cart.</p>
+        <a href="/wishlist" class="btna">Modify Wishlist</a>
+    </div>
+    <div class="carda">
+        <i class="fas fa-shopping-cart"></i>
+        <h3>Product Carts</h3>
+        <p>Modify your cart before checkout.</p>
+        <a href="/carts" class="btna">Modify Cart</a>
+    </div>    
+    <div class="carda">
+        <i class="fas fa-shopping-cart"></i> 
+        <h3>Checkout Accepted Orders</h3> 
+        <p>Proceed to checkout for your accepted orders.</p>  
+        <a href="/checkout_accepted_orders/<%= user.userId %>" class="btna">Checkout</a> 
+    </div> 
+    <div class="carda">
+        <i class="fas fa-truck"></i> 
+        <h3>Track Your Orders</h3> 
+        <p>View and track your orders after purchase.</p>  
+        <a href="/track-orders/<%= user.userId %>" class="btna">Track Orders</a> 
+    </div>
+    
+    <% if(user && user.role == 'admin'){ %> 
+    <div class="carda">  
+        <i class="fas fa-shopping-cart"></i>
+        <h3>Order Requests</h3>
+        <p>Attend to Order Requests.</p>
+        <a href="/orderrequests" class="btna">Accept Order</a>
+    </div>  
+    <div class="carda">
+        <i class="fas fa-clipboard-list"></i>  
+        <h3>Order Requests</h3>
+        <p>Manage Order Requests.</p>
+        <a href="/admin_manageorders/r46i7cygbc" class="btna">Manage Order</a>
+    </div> 
+     <div class="carda">
+        <i class="fas fa-clipboard-list"></i>  
+        <h3>Track State</h3>
+        <p>Manage Tracking State</p>
+        <a href="/admin_manageTrackingState/r46i7cygbc" class="btna">Manage State</a>
+    </div>
+    <% } %>
+    <div class="carda">
+        <i class="fas fa-sign-out-alt"></i>
+        <h3>Logout</h3>
+        <p>Sign out from your account securely.</p>
+        <a href="/logout" class="btna">Logout</a>
+    </div>
+</div>
+ 
+<%- include('../partials/footer.ejs') %>
+</body>
+</html>

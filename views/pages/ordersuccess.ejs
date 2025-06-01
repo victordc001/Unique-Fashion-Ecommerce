@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>  
+    <%- include('../partials/head.ejs') %>  
+    <title>Thanks for Your Payment!</title> 
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }  
+         
+        p, h1{
+             font-family:'Poppins', sans-serif;
+        }
+        .headerimg {
+            background-color: #008080;
+            color: white;
+        }
+        .success-message {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 50px auto;
+            text-align: center;
+        }
+        a {
+            color: #008080;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .success-icon {
+            font-size: 50px; /* Adjust size as needed */
+            color: green; /* Change color as needed */
+            margin-bottom: 20px; /* Spacing below the icon */
+        }
+    </style>
+</head>
+
+<body>  
+
+    <%- include('../partials/topbar.ejs') %>  
+
+     
+
+     <!-- Page Header Start -->
+     <div class="container-fluid mb-5 headerimg">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color:white">Thank You!</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a style="color:#fff; font-weight:bold; font-size:18px;" href="/">Home</a></p>
+                <p class="m-0 px-2">-</p>
+                <p style="color:white; font-size:18px;" class="m-0">successful payment.</p>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->  
+
+
+    <!-- Success Message Start -->
+    <div class="container-fluid"> 
+        <div class="success-message">
+            <i class="fa fa-check-circle success-icon"></i> <!-- Success icon -->
+            <p>We appreciate your business! Your package tracking code will be added to the tracking page shortly. If you have any questions, please email <a href="mailto:ufashion744@gmail.com">ufashion744@gmail.com</a>.</p>
+            <p>Thank you for choosing us!</p>
+        </div>
+    </div>
+    <!-- Success Message End -->
+
+    <!-- Footer Start -->
+    <%- include('../partials/footer.ejs') %> 
+    <!-- Footer End -->
+
+</body>
+</html>

@@ -1,0 +1,150 @@
+ 
+     
+            <div id="sva" vstring = <%=validationString%> class="loginf">
+              <form id="va">
+              <i class="fa fa-key"></i> <br>
+              <p class="bigg">Enter validation string to continue</p>
+              <input id="validpass" type="password" required> 
+              <button>Validate</button>
+            </form>
+             </div> 
+  
+         <div id="admlo" class="loginf">  
+            
+            <form id='leggo'>   
+                    <i class="fa fa-user"></i> 
+                    <p class="bigg"> Administrator Login </p>  
+              <input id="adlogme" type="email" placeholder="Email:" required>  
+              <input id="adlogpass" type="password" placeholder="Password:" required>
+              <p id="aderrlogin"></p>
+              <button id="mlog">Log In</button>
+              <div class="forgotandcreate">  <br>
+                <p id="crea" style='cursor:pointer'>Create new Administrator</p>
+                <p class="ffp" style='cursor:pointer'>Forgot password?</p> 
+                </div> 
+              </form> 
+
+         </div>     
+
+         
+         <script>   
+            
+          var adml = document.getElementById('admlo');
+          var sva = document.getElementById('sva');
+          var valid = sva.getAttribute('vstring');
+          adml.style.display = 'none';  
+          var va = document.getElementById('va');
+          va.addEventListener('submit', async (vv)=>{
+               vv.preventDefault(); 
+          var vp = document.getElementById('validpass');
+          if(vp.value === valid){
+              adml.style.display = 'block';
+              sva.style.display = 'none';
+          } else { 
+ 
+             const notification = document.getElementById('error-notification');
+    const errorMessage = document.getElementById('error-message');
+    
+    errorMessage.textContent = 'Please enter correct validation string'; // Set the error message
+    notification.style.display = 'block'; // Show the notification
+
+    // Automatically hide the notification after 15 seconds
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 7000);
+
+
+          }
+          });
+
+            
+          var leggo = document.getElementById('leggo');
+          leggo.addEventListener('submit', async (p)=>{
+               p.preventDefault();
+                          
+          
+                              let adlogme = document.getElementById('adlogme'); 
+                              let adlogpass = document.getElementById('adlogpass');
+                              let mlog = document.getElementById('mlog');
+                              let loginerror = document.getElementById('aderrlogin');
+                              mlog.innerHTML = 'Processing';
+          
+                              const logindata = {
+                                regemail : adlogme.value,
+                                regpass : adlogpass.value, 
+                              } 
+           
+                              
+                           try{
+                              const response = await fetch('/adlogino', {
+                                  method : 'post',
+                                  body : JSON.stringify(logindata),
+                                  headers : {
+                                     'Content-Type' : 'application/json',
+                                      Accept : 'application/json',
+                                  },
+                              });
+                              
+                              if(!response.ok){
+                                mlog.innerHTML = 'Log In';
+                                  throw response;
+                              }
+          
+                              const result = await response.json();
+                              loginerror.innerHTML = 'success'; 
+                              loginerror.style.color = '#212121';
+                              loginerror.style.marginTop = '10px';
+                              loginerror.style.fontSize = '16px'; 
+                              loginerror.style.fontFamily = 'helvetica'; 
+          
+                                 
+                              setTimeout( ()=> {
+                                loginerror.innerHTML = 'waiting for redirect..'; 
+                           }, 1000);
+          
+                              setTimeout( ()=> {
+                             window.location.href = '/dashboard';  
+                           }, 3000);
+          
+                          }
+          
+          
+                            catch(error){ 
+                              const errresult = await error.text();  
+
+                              const notification = document.getElementById('error-notification');
+    const errorMessage = document.getElementById('error-message');
+    
+    errorMessage.textContent =  errresult; // Set the error message
+    notification.style.display = 'block'; // Show the notification
+
+    // Automatically hide the notification after 15 seconds
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 7000);
+                            }    
+                             
+                     });       
+          
+                    var cre = document.getElementById('crea');
+                    cre.onclick = function() {
+                      window.location.href = '/admin-control-register';
+                    }
+          
+
+                    var forgott = document.querySelector('.ffp');
+                    forgott.onclick = ()=>{
+                      window.location.href = "/reset-password";
+                    }  
+
+
+  //CANCEL ERROR AND SUCCESS NOTIFICATION
+                    document.getElementById('cancel-button').addEventListener('click', () => {
+    document.getElementById('error-notification').style.display = 'none';
+});  
+
+document.getElementById('scancel-button').addEventListener('click', () => {
+    document.getElementById('success-notification').style.display = 'none';
+}); 
+           
+                    </script>

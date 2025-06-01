@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <%- include('../partials/head.ejs'); %> 
+
+     <meta property="og:title" content="Forgot Password: Reset Your Access with Ease">
+
+  <title>Reset password</title>  
+  <style>
+     .loginf{
+           min-width:100px;
+           margin-left:40px;
+           margin-right:40px;
+           padding-left:20px;
+           padding-right:20px;
+           margin-top:40px;    
+           text-align:center;
+        }     
+
+          .loginf i{
+             font-size:70px;
+             color:#008080;
+             animation:reset 1.5s linear infinite;
+             margin-bottom:15px;
+          }  
+
+          @keyframes reset{
+              from{
+                color:black;
+              }   
+
+              to{
+                color:#008080;
+              }
+          }
+
+          .loginf input{
+           width:100%;
+           border:1px solid grey;
+           margin-top:7px;
+           padding:13px;
+        }  
+
+        .loginf input[type='email']:focus {
+              border-color:#008080;
+        }
+
+        .loginf button{
+             padding:15px;
+             border:none;
+             border-radius:5px; 
+             color:white;
+             background-color:#008080;
+             margin-top:13px;
+             width:100%;
+        }   
+
+        @media only screen and (max-width:600px) {
+          .loginf{ 
+           margin-left:20px;
+           margin-right:20px; 
+        }  
+    }
+    
+ 
+  </style>
+</head>
+<body>
+    
+  <%- include('../partials/topbar.ejs') %>   
+
+  <!-- Page Header Start -->
+  <div class="container-fluid mb-5 headerimg">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color:white">RESET PASSWORD</h1>
+        <div class="d-inline-flex">
+            <p class="m-0"><a style="color:#fff; font-weight:bold; font-size:18px;" href="/">Home</a></p>
+            <p class="m-0 px-2">-</p>
+            <p style="color:white; font-size:18px;" class="m-0">Reset Password</p>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+ 
+
+    <div class="loginf">
+        <form id="reset">
+        <i class="fa fa-key"></i> <br>
+        <p class="bigg">Enter your gmail to continue password reset..A link will 
+            be sent to reset your password</p>
+        <input id="validemail" type="email" required> 
+        <button id="sending">Reset</button>
+      </form>
+       </div>  
+
+       <%- include('../partials/footer.ejs'); %>
+
+       <script>
+                     
+         
+          var rst = document.getElementById('reset');   
+          rst.addEventListener('submit', async (vm)=>{
+               vm.preventDefault(); 
+           var vml = document.getElementById('validemail').value; 
+           var snd = document.getElementById('sending');
+           snd.style.opacity = '0.655';
+           snd.innerHTML='Checking Email..';
+           const dataa = {
+                 anemail : vml,
+           }   
+
+
+          try{
+           const resp = await fetch('/submitemail', {
+            body : JSON.stringify(dataa),
+            method : 'post',
+            headers : {
+                  'Content-Type' : 'application/json',
+                  Accept : 'application/json',
+            },
+           });
+
+           if(!resp.ok){
+             throw resp;
+           }  
+             alert('Email sent, please check your inbox or spam');
+           snd.style.opacity = '1';
+           location.reload();
+
+        }
+
+        catch(err){
+            const error = await err.text();
+            alert(error);
+            location.reload();
+        }
+        
+        });
+       </script>
+
+</body>
+</html>

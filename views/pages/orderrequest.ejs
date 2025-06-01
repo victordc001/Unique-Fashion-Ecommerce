@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head.ejs') %>  
+    <meta property="og:title" content="Order Requests: Manage Your Purchases Effortlessly">
+
+    <style>  
+
+
+   button:hover{ 
+        opacity : 0.6;
+   }
+        .order-item {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            width: 100%;
+        } 
+        
+
+        .order-item button { 
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        } 
+
+
+     .accept-btn{
+         background-color:#008080;
+     } 
+
+     .decline-btn{
+         background-color:red;
+     }
+
+        .griddo {
+            display: grid;
+            grid-row-gap: 40px;
+            grid-column-gap: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 3fr));
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 80px;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/topbar.ejs') %>
+
+    <!-- Page Header Start -->
+    <div class="container-fluid mb-5 headerimg">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color:white">Order Management</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a style="color:#fff; font-weight:bold; font-size:18px;" href="/">Home</a></p>
+                <p class="m-0 px-2">-</p>
+                <p style="color:white; font-size:18px;" class="m-0">Orders</p>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+    <!-- Orders Start -->
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">All Orders</span></h2>
+        </div> 
+ 
+        <% let totalQuantity = 0; %> 
+        <% let totalPrice = 0; %>  
+
+        <% if (orders.length > 0) { %>
+            <div class="griddo">
+                <% orders.forEach(order => { %>
+                    <div class="order-item">
+                        <h5 class="font-weight-semi-bold mb-3" style="text-align:center">Order INFO</h5>
+                        <p><strong>Name:</strong> <%= order.firstName %> <%= order.lastName %></p>
+                        <p><strong>Email:</strong> <%= order.email %></p>
+                        <p><strong>Mobile:</strong> <%= order.mobile %></p>
+                        <p><strong>Address:</strong> <%= order.address1 %>, <%= order.address2 %></p> 
+                        <p><strong>City:</strong> <%= order.city %></p>
+                        <p><strong>Zip Code:</strong> <%= order.zip %></p>
+                        <p><strong>Country:</strong> <%= order.country %></p>
+                        <p><strong>State:</strong> <%= order.state || 'N/A' %></p>
+                        <p><strong>Status:</strong> <%= order.ordreqStatus %> </p>
+                        <h6>Cart Details:</h6> 
+                        
+                        <ul>  
+                               <% order.cartDetails.forEach(item => { %> 
+                                
+                                <% totalQuantity += item.quantity; %> 
+                                <% totalPrice += parseFloat(item.totalPrice); %> 
+
+                                <li><%= item.productName %> (Size: <%= item.size %>, Qty: <%= item.quantity %>, Price: <%= item.totalPrice %> )</li>
+                                <li>( Length: <%= item.length %>, Width: <%= item.width %> )</li>  
+                                <li>( Height: <%= item.height %>, Weight: <%= item.itemWeight %> )</li>    <br>     
+                              
+                                <% }); %>
+                        </ul>
+                        <p><strong>Total Price:</strong> <%= order.cartDetails.reduce((total, item) => total + parseFloat(item.totalPrice), 0).toFixed(2) %>£</p>
+                        <button class="accept-btn" data-total="<%= order.cartDetails.reduce((total, item) => total + parseFloat(item.totalPrice), 0)%>" data-email="<%= order.email %>" data-id="<%= order._id %>">Accept</button>
+                        <button class="decline-btn" data-email="<%= order.email %>" data-id="<%= order._id %>">Decline</button>
+                    </div>  
+            </div> 
+                <% }); %> 
+                <div style="text-align:center; min-width:100%;"> 
+                    <p><b>Total Quantity</b>: <%= totalQuantity %></p>  
+                    <p><b>Total Price</b>: <%= totalPrice.toFixed(2) %>£</p>
+                  </div>
+        <% } else { %>
+            <div class="col-lg-12">
+                <p class="text-center">No orders available.</p>
+            </div>
+        <% } %>  
+    </div>  
+
+   
+    
+    <!-- Orders End -->
+
+    <!-- Footer Start -->
+    <%- include('../partials/footer.ejs') %>
+    <!-- Footer End -->
+
+    <!-- Decline Modal -->
+    <div id="decline-modal" class="modal">
+        <div class="modal-content"> 
+            <form id="decl-shipping">
+            <span class="close" id="close-decline-modal">&times;</span>
+            <h2>Reason for Decline</h2>
+            <input style="width:100%" id="decline-reason" min="8" placeholder="Enter reason here..." required> 
+            <button id="submit-decline">Submit Decline</button> 
+            </form>
+        </div>
+    </div>
+
+    <!-- Shipping Fee Modal -->
+    <div id="shipping-modal" class="modal">
+        <div class="modal-content"> 
+            <form id="subm-shipping">
+            <span class="close" id="close-shipping-modal">&times;</span>
+            <h2>Enter Shipping Fee</h2>
+            <input type="number" id="shipping-fee-input" style="width:100%" placeholder="Shipping Fee (£)" required>
+            <button id="submit-shipping">Submit Shipping Fee</button> 
+        </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let currentOrderId; 
+            let userEmail; 
+            let totalPrice;
+
+            document.querySelectorAll('.decline-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    currentOrderId = e.target.getAttribute('data-id');  
+                    userEmail = e.target.getAttribute('data-email'); 
+                    document.getElementById('decline-modal').style.display = 'block';
+                });
+            });
+
+            document.querySelectorAll('.accept-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    currentOrderId = e.target.getAttribute('data-id'); 
+                    userEmail = e.target.getAttribute('data-email');    
+                    totalPrice = e.target.getAttribute('data-total');
+                    document.getElementById('shipping-modal').style.display = 'block';
+                });
+            });
+
+            document.getElementById('close-decline-modal').onclick = function() {
+                document.getElementById('decline-modal').style.display = 'none';
+            };
+
+            document.getElementById('close-shipping-modal').onclick = function() {
+                document.getElementById('shipping-modal').style.display = 'none';
+            };
+
+            document.getElementById('decl-shipping').addEventListener('submit', async (n) => { 
+                n.preventDefault();
+                const reason = document.getElementById('decline-reason').value; 
+            
+                try {
+                    const resp = await fetch(`/decline-order/${currentOrderId}/${userEmail}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Accept : 'application/json',
+                        },
+                        body: JSON.stringify({ reason })
+                    });
+                    if (resp.ok) {
+                        alert('Order declined successfully.');
+                        location.reload();
+                    } else {
+                        throw new Error('Failed to decline order');
+                    }
+                } catch (err) {
+                    alert(err.message);
+                }
+            });
+
+            document.getElementById('subm-shipping').addEventListener('submit', async (n) => {
+                n.preventDefault();
+                const shippingFee = document.getElementById('shipping-fee-input').value;  
+                try {
+                    const resp = await fetch(`/accept-order/${currentOrderId}/${userEmail}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ shippingFee, totalPrice })
+                    });
+                    if (resp.ok) {
+                        alert('Order accepted successfully.');
+                        location.reload();
+                    } else {
+                        throw new Error('Failed to accept order');
+                    }
+                } catch (err) {
+                    alert(err.message);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

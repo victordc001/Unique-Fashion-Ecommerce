@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head.ejs') %> 
+
+    <meta property="og:title" content="Get in Touch: We're Here to Help You">
+
+</head>
+
+<body>  
+    
+    <%- include('../partials/topbar.ejs') %>  
+
+
+  <!-- Page Header Start -->
+  <div class="container-fluid mb-5 headerimg">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color:white">CONTACT US</h1>
+        <div class="d-inline-flex">
+            <p class="m-0"><a style="color:#fff; font-weight:bold; font-size:18px;" href="/">Home</a></p>
+            <p  class="m-0 px-2">-</p>
+            <p style="color:white; font-size:18px;" class="m-0">Contact</p>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+
+    <!-- Contact Start -->
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Contact For Any Queries</span></h2>
+        </div>
+        <div class="row px-xl-5">
+            <div class="col-lg-7 mb-5">
+                <div class="contact-form">
+                    <div id="success"></div>
+                    <form id="contactForm">
+                        <div class="control-group">
+                            <input type="text" class="form-control" id="name" placeholder="Your Name"
+                                required="required" data-validation-required-message="Please enter your name" />
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div class="control-group">
+                            <input type="email" class="form-control" id="email" placeholder="Your Email"
+                                required="required" data-validation-required-message="Please enter your email" />
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div class="control-group">
+                            <input type="text" class="form-control" id="subject" placeholder="Subject"
+                                required="required" data-validation-required-message="Please enter a subject" />
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div class="control-group">
+                            <textarea class="form-control" rows="6" id="message" placeholder="Message"
+                                required="required"
+                                data-validation-required-message="Please enter your message"></textarea>
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div>
+                            <button style="background-color:#008080; color:white;" class="btn py-2 px-4" type="submit" id="sendMessageButton">Send
+                                Message</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-5 mb-5">
+                <h5 class="font-weight-semi-bold mb-3">Get In Touch</h5>
+                <p>Have questions or need assistance? We're here to help! Reach out to us, and we'll get back to you as soon as possible.</p>
+                <div class="d-flex flex-column mb-3">
+                    <h5 class="font-weight-semi-bold mb-3">Store</h5>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt mr-3"></i>Gloucester,UK</p>
+                    <p class="mb-2"><i class="fa fa-envelope mr-3"></i>ufashion744@gmail.com</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt mr-3"></i>07496967165</p>
+                </div> 
+            </div>
+        </div>
+    </div>
+    <!-- Contact End -->
+
+
+    <!-- Footer Start --> 
+    <%- include('../partials/footer.ejs') %> 
+    <!-- Footer End --> 
+
+     <script>
+         var contacting = document.getElementById("contactForm");
+         contacting.addEventListener('submit', async (e)=>{ 
+            var thebtn = document.getElementById('sendMessageButton');
+            thebtn.style.opacity = 0.2;
+            thebtn.innerHTML = 'Sending..';
+            thebtn.disabled = true;
+             e.preventDefault();  
+             var uname = document.getElementById('name'); 
+             var uemail = document.getElementById('email');
+             var usubject = document.getElementById('subject');
+             var umessage = document.getElementById('message');  
+ 
+             const dat = {
+                 sendername : uname.value,
+                 senderemail : uemail.value,     
+                 sendersubject : usubject.value,
+                 sendermessage : umessage.value,
+             }  
+ 
+             try{
+             const resp = await fetch('/contactee', {  
+                
+                method : 'post',
+                headers: {
+                 'Content-Type' : 'application/json',
+                 Accept : 'application/json',
+                }, 
+                body: JSON.stringify(dat), 
+             });  
+
+                if(!resp.ok) {
+                     throw resp;
+                }  
+                setTimeout(()=>{ 
+      alert('Thanks for contacting us., Your message has been successfully delivered'); 
+      thebtn.style.opacity = 2;
+            thebtn.innerHTML = 'Sent';
+            thebtn.disabled = false; 
+            location.reload();
+                }, 3000); 
+
+            } catch (err) {
+                  const error = await err.text(); 
+                  thebtn.style.opacity = 2;
+            thebtn.innerHTML = 'Sent';
+            thebtn.disabled = false;
+                  alert('An error occured, please check your network and try again'); 
+                  location.reload();
+            }
+         }); 
+     </script> 
+</body>
+
+</html>

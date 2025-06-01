@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head.ejs') %>
+    <title>Admin - Manage Orders</title>
+    <style>
+        .headerimg {
+            background-color: #008080;
+            color: white;
+        }
+
+        .order-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+        } 
+          
+.acard{
+         width:100%; 
+         padding-left:20px;
+         padding-right:20px; 
+         padding-top:20px;
+         padding-bottom:20px;
+         border:1px solid #008080;
+         overflow:scroll;
+     }    
+
+     
+     .gridda {
+  display: grid;
+  grid-row-gap: 40px;
+  grid-column-gap: 40px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 2fr)); /* Use auto-fill */
+  margin: 0 10px;    
+  padding: 0 10px; 
+  box-sizing: border-box; 
+}
+    </style>
+</head>
+
+<body> 
+    
+    <%- include('../partials/topbar.ejs') %>  
+
+    <!-- Page Header Start -->
+    <div class="container-fluid mb-5 headerimg">
+     <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+         <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color:white">MANAGE ORDERS</h1>
+         <div class="d-inline-flex">
+             <p class="m-0"><a style="color:#fff; font-weight:bold; font-size:18px;" href="/">Home</a></p>
+             <p  class="m-0 px-2">-</p>
+             <p style="color:white; font-size:18px;" class="m-0">Manage Orders</p>
+         </div>
+     </div>
+ </div> <br><br>
+ <!-- Page Header End -->
+
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Successful Orders</span></h2>
+        </div>
+
+        <div class="gridda"> 
+            <% if(orders.length > 0) { %>  
+            <% orders.forEach(order => { %>  
+                <div class="acard">
+                    <h5>Order Info</h5>
+                    <p>Destination: <%= order.address1 %>, <%= order.address2 %>, <%= order.country %>, <%= order.city %>, <%= order.state %>, <%= order.zip %></p>
+                  
+                    <ul>   
+                        <li>Owner email: <b><%=order.email%></b></li>    
+                        <li>Owner mobile no: <b><%=order.mobile%></b></li>   
+                        
+                        <li>Owner country: <b><%=order.country%></b></li> 
+                        <li>Owner city: <b><%=order.city%></b></li> 
+                        <li>Owner state: <b><%=order.state%></b></li> 
+                        <li>Owner postal code: <b><%=order.zip%></b></li> 
+
+                        <% order.cartDetails.map(item => { %> 
+                         <ul>  
+                         <li>Product name: <b><%=item.productName%></b></li> 
+                         <li>Product quantity: <b><%=item.quantity%></b></li> 
+                         <li>Product size: <b><%=item.size%></b></li>  
+                         <li>Product price: <b><%=item.totalPrice%></b></li> 
+                         <li>Product weight: <b><%=item.itemWeight%></b></li>
+                         <li>Product height: <b><%=item.height%></b></li>
+                         <li>Product width: <b><%=item.width%></b></li> 
+                         <li>Product length: <b><%=item.length%></b></li>
+                           <br> 
+                         </ul>
+                     <% }); %>       
+                     <li>Shipping fee: <b><%=order.shippingFee%></b></li>  
+                     <li>Payment status: <b><%=order.paymentStatus%></b></li>    
+                     </ul>  
+
+                    <form class="updateorder" orderId='<%= order._id %>'>
+                        <input type="text" name="trackingCode" placeholder="Update Tracking Code" required>
+                        <button type="submit" class="btn" style="background-color: #008080; color: white;">Update</button>
+                    </form>   
+
+                    <button onclick="generateTrackingCode()" class="btn" style="background-color: #008080; color: white;">Generate Tracking Code</button> 
+                  
+                 </div>
+            <% }); %>
+        </div>   
+        <% } else { %>
+            <p style="text-align:center; font-family:'Poppins', sans-serif">Hi <%=user.reguser%>, You have no successful order yet, please come back later🙂</p>
+        <% } %>
+    </div>  </div>
+
+    <!-- Footer Start --> 
+    <%- include('../partials/footer.ejs') %>
+    <!-- Footer End -->
+
+    <script>   
+
+    var trkcode;
+function generateTrackingCode() {
+    // Start with 'UNIQUE'
+    const prefix = "UNIQUE";
+    
+    // Generate 4 random digits
+    let numbers = Math.floor(1000 + Math.random() * 9000); // ensures 4 digits
+
+    // Combine into final code
+    const trackingCode = prefix + numbers;
+    trkcode = trackingCode; // Store the code in a global variable
+
+    // Alert the code
+    alert("Your tracking code is: " + trackingCode);
+
+    // Copy to clipboard
+    navigator.clipboard.writeText(trackingCode)
+        .then(() => {
+            console.log("Tracking code copied to clipboard");
+        })
+        .catch(err => {
+            console.error("Failed to copy: ", err);
+        });
+}
+
+
+
+        // Select all forms with the class 'updateorder'
+        const forms = document.querySelectorAll('.updateorder');
+
+        forms.forEach(form => {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                // Get the order ID from the form's attribute
+                const orderId = form.getAttribute("orderId");
+                // Get the input value
+                const trackingCode = form.querySelector('input[name="trackingCode"]').value;
+
+                try {
+                    const resp = await fetch(`/manageorders/update/${orderId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Accept: 'application/json',
+                        },
+                        body: JSON.stringify({ trackingCode }), // Send the tracking code
+                    });
+
+                    if (!resp.ok) {
+                        throw resp;
+                    }
+                    alert('Tracking code successfully updated!'); 
+                    location.reload();
+                } catch (err) {
+                    const error = await err.text();
+                    alert(error);
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+    <%- include('../partials/head.ejs') %>  
+     <title>Edit Profile</title>   
+     <meta property="og:title" content="Update Profile: Keep Your Information Current">
+
+       <style>   
+
+       
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4; 
+        }  
+
+        .encloser{
+              display:flex;
+              justify-content:space-between;
+              min-width:100px;
+              margin-left:10px;
+              margin-right:10px;
+              padding-left:10px;
+              padding-right:10px;
+        }  
+
+        .profileicon{
+              width:50%;
+              color:black;
+              font-weight:bold;
+              font-size:100px;
+              text-align:center;
+              padding-top:100px; 
+        }    
+
+        .profile-container {
+            width:100%;     
+            margin-left:20px;
+            margin-right:20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }    
+
+
+        
+        .pfpenc {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+} 
+
+.pfp {
+    width: 150px; /* Adjust the size as needed */
+    height: 150px; /* Make it a square */
+    border-radius: 50%; /* Make it circular */
+    background-color: #f0f0f0; /* Background color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position:relative;
+    margin: 0 auto; /* Center it horizontally */
+    border: 2px solid #ccc; /* Optional: border for better visibility */
+} 
+
+
+.pfp i {
+    font-size: 70px; /* Adjust icon size */
+    color: #008080; /* Icon color */  
+}
+  
+.pfp img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* This ensures the image covers the entire area without distortion */
+    border-radius: 50%; /* Maintain circular shape */
+}
+
+.uploading{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent overlay */ 
+    align-items: center; 
+    padding-top:70px;
+    justify-content: center; 
+    transition: opacity 0.3s ease;
+    opacity:0; /* initially hidden*/
+    cursor: pointer;   
+    color:white;
+    border-radius:50%; 
+} 
+
+
+.edit-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent overlay */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.3s ease;
+    cursor: pointer;  
+    border-radius:50%;
+} 
+     
+
+.edit-icon i {
+    color: white;
+    font-size: 30px;
+}
+
+.pfp:hover .edit-icon {
+    opacity: 1; /* Show the edit icon on hover */
+}
+
+        .profile-container h2 {
+            color: #008080;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .form-group input[type="text"], 
+        .form-group input[type="email"], 
+        .form-group input[type="password"], 
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .form-group input[type="text"]:focus, 
+        .form-group input[type="email"]:focus, 
+        .form-group input[type="password"]:focus, 
+        .form-group select:focus {
+            border-color: #008080;
+            outline: none;
+        }
+
+        .btn-save {
+            display: inline-block;
+            background-color: #008080;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-save:hover {
+            background-color: #006666;
+        }  
+
+        .btn-cancel {
+            display: inline-block;
+            background-color: #ccc;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .btn-cancel:hover {
+            background-color: #999;
+        }     
+
+
+        @media only screen and (max-width:600px) { 
+
+            .encloser{
+               display:block;
+            } 
+
+            .profile-container {
+                  margin:0px;
+            }
+
+                 .profileicon{
+                      display:none;
+                 }
+        }
+    </style>
+</head>
+<body> 
+
+    <%- include('../partials/topbar.ejs') %>  
+
+    <!-- Page Header Start -->
+    <div class="container-fluid mb-5 headerimg">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color:white">EDIT PROFILE</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a style="color:#fff; font-weight:bold; font-size:18px;" href="/">Home</a></p>
+                <p class="m-0 px-2">-</p>
+                <p style="color:white; font-size:18px;" class="m-0">Edit Profile</p>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+  <div class="encloser"> 
+    <div class="profileicon">
+         <i class="fa fa-user-edit"></i>
+    </div>
+     <div class="profile-container">
+        <h2>Edit Your Profile</h2> 
+        <form id="updatestart" enctype="multipart/form-data">  
+            <div class="pfpenc">
+            <div class="pfp">   
+
+                <!---Uploading indicator---->
+        <div class="uploading">
+            <p style="color:white; text-align:center">Uploading..</p>
+        </div> 
+        
+                 <!-- Edit icon -->
+        <div id="editIconn" class="edit-icon">
+            <i class="fa fa-edit"></i>
+        </div>   
+
+        <input type="file" style="display:none" id="profilePictureInput" accept="image/*">
+            <% if(memb && memb.profilepicture && memb.profilepicture.path) { %>
+                <img id="profileImage" src="<%= memb.profilepicture.path %>?t=<%= new Date().getTime() %>" alt="Profile Picture">
+                <% } else { %>
+                <i class="fa fa-user-tie"></i>  
+            <% } %>
+        </div> 
+            </div>  
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" value="<%=memb.reguser%>" id="username" name="username">
+            </div> 
+            <div class="form-group">
+                <label for="firstname">First Name</label>
+                <input type="text" value="<%=memb.firstname%>" id="firstname">
+            </div>  
+            <div class="form-group">
+                <label for="lastname">Last Name</label>
+                <input type="text" value="<%=memb.lastname%>" id="lastname">
+            </div>  
+            <p id="erre"></p>
+            <button type="submit" id="saveit" class="btn-save">Save Changes</button> 
+        </form>
+    </div> 
+    </div>   
+
+      <script>   
+      
+      
+
+           var updating = document.getElementById('updatestart');
+           updating.addEventListener('submit', async (e)=>{
+            e.preventDefault();  
+            var uname = document.getElementById('username');
+            var fname = document.getElementById('firstname');
+            var lname = document.getElementById('lastname'); 
+            var errer = document.getElementById('erre'); 
+            var saveitt = document.getElementById('saveit');   
+            saveitt.innerHTML = 'Updating..';
+            //change button state
+            saveitt.style.opacity = 0.3;
+            saveitt.disabled = true;
+            // collect the update infos
+            const upddata = {
+                 reguser : uname.value, 
+                 firstname : fname.value,
+                 lastname : lname.value,
+            }  
+               
+
+            try{
+            const resp = await fetch('/updateprofiledata', {
+                 method : 'post',
+                 body : JSON.stringify(upddata),
+                 headers : {
+                       'Content-Type' : 'application/json',
+                       Accept: 'application/json',
+                 },
+            });    
+
+            if(!resp.ok) {
+                  throw resp;
+            }     
+
+              //change button state 
+              saveitt.innerHTML = 'Updated';
+              setTimeout(()=>{ 
+                saveitt.style.opacity = 2;
+                saveitt.disabled = false;
+              }, 3000);  
+ 
+              setTimeout(()=>{  
+   uname.value = ''; 
+   fname.value = '';
+   lname.value = ''; 
+   saveitt.innerHTML = 'Save Changes'; 
+   location.reload(); 
+              }, 3200);
+
+        }  catch (err) {
+              const error = await err.text();  
+              errer.innerHTML = error;
+              errer.style.color = 'red';
+              errer.style.marginTop = '10px';
+              errer.style.fontSize = '15px';
+              errer.style.fontWeight = 'bold'; 
+        }
+
+        
+           });  
+
+
+
+
+
+
+
+
+   // Trigger file input on edit icon click  
+   var editicon = document.getElementById('editIconn'); 
+   editicon.onclick = function () {  
+        const afile = document.getElementById('profilePictureInput');
+        afile.click(); // Trigger the file input
+    }; 
+
+
+// Listen for file selection
+document.getElementById('profilePictureInput').addEventListener('change', async function() {
+    const afile = this;
+    const chosenfile = afile.files[0];
+
+    if (chosenfile) {
+        const uploading = document.querySelector('.uploading');
+        uploading.style.opacity = '2'; // Show uploading indicator
+        document.getElementById('editIconn').style.display = 'none'; // Hide edit icon
+
+        try {
+            const newfile = new FormData();
+            newfile.append('profilePicture', chosenfile); // Append file with key 'profilePicture'
+            
+            const resp = await fetch('/upldpfp', {
+                method: 'POST',
+                body: newfile,
+            });
+
+            if (!resp.ok) {
+                throw resp;
+            }
+            
+             setTimeout(()=>{ 
+                uploading.style.display = 'none'; // Hide uploading indicator
+            alert('Picture uploaded successfully');
+            location.reload(); // Reload to update the profile picture
+             },3000);
+        } catch (err) {
+            uploading.style.display = 'none'; // Hide uploading indicator
+            alert('An error occurred during the upload. Make sure you are uploading an image.');
+             location.reload();
+        }
+    } else {
+        alert('No file selected.');
+    }
+});
+
+
+
+
+      </script> 
+
+        <%- include('../partials/footer.ejs') %>
+</body>
+</html>

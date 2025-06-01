@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head> 
+        <%- include('../partials/head.ejs') %>   
+
+        <meta property="og:title" content="Product Details: Discover Features and Specifications">
+ 
+     <style>  
+           
+            .griddo{
+                  display:grid;
+                  grid-row-gap:40px;
+                  grid-column-gap:40px;
+                  grid-template-columns:repeat(auto-fit, minmax(200px, 3fr));
+                  min-width:100px;
+                  margin-left:10px;
+                  margin-right:10px;
+                  padding-left:10px;
+                  padding-right:10px;
+            }  
+
+             #carousel-wrapper {
+    position: relative;
+    width: 80%;
+    max-width: 800px;
+    margin: auto;
+    overflow: hidden;
+}
+
+.carousel-wrapper {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-slide {
+    min-width: 100%;
+    box-sizing: border-box;
+}
+
+.carousel-slide img {
+    width: 100%;
+    height: auto; /* Adjusts the height of the image */
+    display: block;
+}
+
+.nav-arrow {
+    position: absolute;
+    top: 50%;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    text-align: center;
+    line-height: 40px;
+    transform: translateY(-50%);
+}
+
+.prev-arrow {
+    left: 10px;
+}
+
+.next-arrow {
+    right: 10px;
+}
+           </style>
+    </head>
+
+<body>
+    <head> 
+        <%- include('../partials/topbar.ejs') %> 
+    </head>
+
+
+   <!-- Page Header Start -->
+   <div class="container-fluid mb-5 headerimg">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3" style="color:white">SHOP DETAIL</h1>
+        <div class="d-inline-flex">
+            <p class="m-0"><a style="color:#fff; font-weight:bold; font-size:18px;" href="/">Home</a></p>
+            <p  class="m-0 px-2">-</p>
+            <p style="color:white; font-size:18px;" class="m-0">Shop Detail</p>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+ 
+
+<div id="hiddenlf" style="display:none">  
+    <%- include('../partials/loginfirst.ejs') %>
+</div>
+
+
+    <!-- Shop Detail Start -->
+    <div class="container-fluid py-5">
+        <div class="row px-xl-5">
+            <div class="col-lg-5 pb-5">
+                <div id="carousel-wrapper">
+                    <div class="carousel-wrapper">  
+                        <% produ.productImage.forEach((each)=>{ %>
+                        <div class="carousel-slide">
+                            <img class="w-100 h-100" src="/<%=each.path%>" alt="Image">
+                        </div>
+                         <% }); %>
+                    </div>
+                    <button class="nav-arrow prev-arrow" onclick="prevSlide()">&#10094;</button>
+                    <button class="nav-arrow next-arrow" onclick="nextSlide()">&#10095;</button>
+                </div>
+            </div>
+
+            <div class="col-lg-7 pb-5"> 
+                <% produ.variation.forEach((variation)=>{ %> 
+                    <% var randomsize = Math.floor(Math.random() * variation.sizes.length); %>
+                    <% var rnd = variation.sizes[randomsize]; %>   
+                    <div style="display:none" id="hiddenszname" szname = '<%=rnd.sizeName%>'></div>
+                <h3 class="font-weight-semi-bold"><%=produ.productName%></h3>
+                <div class="d-flex mb-3">
+                    <div style="display:none" class="text-primary mr-2">
+                        <small class="fas fa-star"></small>
+                        <small class="fas fa-star"></small>
+                        <small class="fas fa-star"></small>
+                        <small class="fas fa-star-half-alt"></small>
+                        <small class="far fa-star"></small>
+                    </div>
+                    <small style="display:none" class="pt-1">(50 Reviews)</small>
+                </div>
+                <h3 id="dpprice" theprice = '<%=produ.priceuk%>' class="font-weight-semi-bold mb-4"><%=parseFloat(rnd.priceAdjustmentUk)%>.00£</h3>
+                <p class="mb-4"><%=produ.productDescription%></p>
+                <div class="d-flex mb-3">
+                    <p class="text-dark font-weight-medium mb-0 mr-3">Sizes:</p>
+                    <form> 
+                           
+                       <% variation.sizes.forEach((each)=>{ %>
+                            <div class="asize" myid="<%=each._id%>">  
+                                <label for="dsizes"><%=each.sizeName%></label> 
+                                <input type="radio" class="sizescheck" sizenname = '<%=each.sizeName%>' sizepprice="<%=each.priceAdjustmentUk%>" name="size">
+                             </div> 
+                        <% }); %>  
+                        <% }); %>   
+
+                    </form>
+                </div>
+             
+                <div class="d-flex align-items-center mb-4 pt-2">
+                    <div class="input-group quantity mr-3" style="width: 130px;">
+                        <div class="input-group-btn">
+                            <button style="background-color:#008080; color:white" id="decreasing" class="btn btn-minus" >
+                            <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                        <input type="number" id="quantity" class="form-control bg-secondary text-center" value="1">
+                        <div class="input-group-btn">
+                            <button style="background-color:#008080; color:white" id="increasing" class="btn btn-plus">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                 </div>  
+
+                <div style="background-color:#008080;" class="card-footer d-flex justify-content-between border">
+                <% if(user) { %>  
+                    <i class="fa fa-heart wishlisticonforauthenticated" productId = '<%=produ._id%>' style="color:white; cursor:pointer; border-radius:50px; font-size:20px"></i>
+                 <% } else { %>  
+                   <i class="fa fa-heart ordinarywishlisticon" style="color:white; cursor:pointer; border-radius:50px; font-size:20px"></i>
+                  <% } %>
+                  <button style="color:#fff; background:none; border:none" productId = '<%=produ._id%>' class="btn-sm p-0 atcc"><i style="color:#fff" class="fas fa-shopping-cart mr-1"></i>Add To Cart</button>
+             </div>   
+            <% if(user && user.role == 'admin'){ %> 
+            <div style="background-color:#008080;" class="card-footer d-flex justify-content-between border">
+                <a href="/admin-control/collections/<%=produ.productName%>/<%=produ._id%>" style="color:#fff" class="btn-sm p-0"><i style="color:#fff" class="fas fa-eye mr-1"></i>Edit Product</a>
+                <a href="/" style="color:#fff" productId = '<%=produ._id%>' class="delprod btn-sm p-0"><i style="color:#fff" class="fas fa-shopping-cart mr-1"></i>Delete Product</a>
+            </div>  
+        <% } %>
+
+            </div>
+            </div>
+        </div> 
+
+        <!------
+        <div class="row px-xl-5">
+            <div class="col"> 
+                <div class="tab-content"> 
+                    <div class="tab-pane fade" id="tab-pane-3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4 class="mb-4">1 review for "Colorful Stylish Shirt"</h4>
+                                <div class="media mb-4">
+                                    <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                    <div class="media-body">
+                                        <h6>John Doe<small> - <i>01 Jan 2045</i></small></h6>
+                                        <div class="text-primary mb-2">
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star"></i>
+                                            <i class="fas fa-star-half-alt"></i>
+                                            <i class="far fa-star"></i>
+                                        </div>
+                                        <p>Diam amet duo labore stet elitr ea clita ipsum, tempor labore accusam ipsum et no at. Kasd diam tempor rebum magna dolores sed sed eirmod ipsum.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h4 class="mb-4">Leave a review</h4>
+                                <small>Your email address will not be published. Required fields are marked *</small>
+                                <div class="d-flex my-3">
+                                    <p class="mb-0 mr-2">Your Rating * :</p>
+                                    <div class="text-primary">
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                </div>
+                                <form>
+                                    <div class="form-group">
+                                        <label for="message">Your Review *</label>
+                                        <textarea id="message" cols="30" rows="5" class="form-control"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Your Name *</label>
+                                        <input type="text" class="form-control" id="name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Your Email *</label>
+                                        <input type="email" class="form-control" id="email">
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <input type="submit" value="Leave Your Review" class="btn btn-primary px-3">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   \Shop Detail End -->
+
+
+    <!-- Products Start --> 
+     <% if(yml.length > 0){ %> 
+    <div class="container-fluid py-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">You May Also Like</span></h2>
+        </div>   
+     </div> 
+    <% } %>
+        
+        <div class="griddo"> 
+            <% yml.forEach(each=>{ %> 
+            <div class="card product-item border-0">
+                <div style="height:240px" class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                <!--Calculate a random index based on the length of the productImage array-->
+                   <% const randomIndex = Math.floor(Math.random() * each.productImage.length); %>
+                   <% const randomImage = each.productImage[randomIndex]; %>
+                    <img style="object-fit:cover;" class="img-fluid w-100" src='<%=`/${randomImage.path}`%>' alt="">
+                </div>
+                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                    <h6 class="text-truncate mb-3"><%=each.productName%></h6>
+                    <div style="border:1px dotted black; padding-top:5px; margin-left:10px; margin-right:10px" class="d-flex justify-content-center">
+                        <h6><%=each.priceuk%></h6>
+                    </div>
+                </div>
+                <div style="background-color:#008080;" class="card-footer d-flex justify-content-between border">
+                    <a href="/collections/<%=each.category%>/<%=each.productName%>/<%=each._id%>" style="color:#fff" class="btn-sm p-0"><i style="color:#fff" class="fas fa-eye mr-1"></i>View Detail</a>
+                    <% if(user) { %>  
+                    <i class="fa fa-heart wishlisticonforauthenticated" productId = '<%=each._id%>' style="color:white; cursor:pointer; border-radius:50px; font-size:20px"></i>
+                    <% } else { %>  
+                        <i class="fa fa-heart ordinarywishlisticon" style="color:white; cursor:pointer; border-radius:50px; font-size:20px"></i>
+                  <% } %>
+                      <button style="color:#fff; background:none; border:none" productId = '<%=each._id%>' class="btn-sm p-0 atc"><i style="color:#fff" class="fas fa-shopping-cart mr-1"></i>Add To Cart</button>
+                 </div>  
+                <% if(user && user.role == 'admin'){ %> 
+                <div style="background-color:#008080;" class="card-footer d-flex justify-content-between border">
+                    <a href="/admin-control/collections/<%=each.productName%>/<%=each._id%>" style="color:#fff" class="btn-sm p-0"><i style="color:#fff" class="fas fa-eye mr-1"></i>Edit Product</a>
+                    <a href="/" style="color:#fff" productId = '<%=each._id%>' class="delprod btn-sm p-0"><i style="color:#fff" class="fas fa-shopping-cart mr-1"></i>Delete Product</a>
+                </div>  
+            <% } %>
+            </div>   
+        <% }); %> 
+        
+
+  </div>
+        
+    <!-- Products End -->
+
+
+    <!-- Footer Start --> 
+     <footer>
+        <%- include('../partials/footer.ejs') %>   
+    </footer>
+     
+
+
+    <script>
+          let currentIndex = 0;
+
+function showSlide(index) {
+    const slides = document.querySelectorAll('.carousel-slide');
+    const totalSlides = slides.length;
+
+    if (index >= totalSlides) {
+        currentIndex = 0;
+    } else if (index < 0) {
+        currentIndex = totalSlides - 1;
+    } else {
+        currentIndex = index;
+    }
+
+    const offset = -currentIndex * 100;
+    document.querySelector('.carousel-wrapper').style.transform = `translateX(${offset}%)`;
+}
+
+function nextSlide() {
+    showSlide(currentIndex + 1);
+}
+
+function prevSlide() {
+    showSlide(currentIndex - 1);
+}
+
+// Optionally, auto-slide every 5 seconds
+setInterval(nextSlide, 5000);      
+
+  
+
+
+
+  var selectedPrice;
+  var selectedName;
+     // Function to update the price based on selected size
+function updatePrice() {
+    var priceElement = document.getElementById('dpprice');  
+
+    //initially when page loads and user has not selected any radio
+    selectedPrice = priceElement.innerText;
+    selectedName =  document.getElementById('hiddenszname').getAttribute('szname'); 
+
+    // Find the selected radio button
+    var selectedRadio = document.querySelector('input[name="size"]:checked');
+ if (selectedRadio) { 
+    selectedPrice = selectedRadio.getAttribute('sizepprice'); 
+    selectedName = selectedRadio.getAttribute('sizenname'); 
+} 
+    priceElement.innerHTML = selectedPrice // Update price
+} 
+
+
+// Add event listeners to radio buttons to update the price when selection changes
+document.querySelectorAll('input[name="size"]').forEach((radio) => {
+        radio.addEventListener('change', updatePrice);
+    }); 
+
+// Initialize price on page load
+updatePrice();
+
+
+
+
+
+var currentquant;
+var increasing = document.getElementById('increasing');
+increasing.onclick = function() {
+     var quantity = document.getElementById('quantity');
+    //increase the value
+     quantity.value++;
+     currentquant = quantity.value;
+}    
+
+
+
+
+
+var decreasing = document.getElementById('decreasing');
+decreasing.onclick = function() {
+     var quantity = document.getElementById('quantity');
+    //decrease the value
+     quantity.value--; 
+     if(quantity.value < 1){
+         quantity.value = 1; 
+         currentquant = quantity.value;
+     } 
+     currentquant = quantity.value;
+} 
+
+
+
+
+
+var delprod = document.querySelectorAll('.delprod'); 
+          for(i = 0; i<delprod.length; i++) {  
+          delprod[i].addEventListener('click', async (a)=>{
+             a.preventDefault(); 
+             var conf = confirm('Are you sure you want to delete this product?');
+             if(conf){   
+                var productid = a.target.getAttribute('productId');  
+                try{
+                 const deleted = await fetch(`/deletingprod/${productid}`, {
+                     method : 'delete',
+                 });   
+                 if(!deleted.ok){
+                     throw deleted;
+                 }
+                 alert('Product deleted successfully'); 
+                 location.reload();
+                }  catch(err) {
+                      var error = await err.text(); 
+                      alert(error);  
+                }
+             }  else {
+                  return;
+             }
+          }); 
+        }    
+
+
+           
+           //Wishlist adding for NONauthenticated users
+           var nonwlic = document.querySelectorAll('.ordinarywishlisticon'); 
+            nonwlic.forEach((each)=>{
+                each.onclick = ()=>{
+                    var loginform = document.getElementById('hiddenlf');
+                    loginform.style.display = 'block';
+                }  
+            });
+
+            //Wishlist adding for authenticated users
+            var wlic = document.querySelectorAll('.wishlisticonforauthenticated'); 
+            wlic.forEach((each)=>{  
+                each.addEventListener('click', async (e)=>{
+              e.preventDefault();   
+             var elemId = each.getAttribute('productId');  
+             var dat = {
+                 prodId : elemId,   
+             } 
+
+             try{
+          const result = await fetch('/addwishlist', {
+                   method : 'post',
+                   body : JSON.stringify(dat),
+                   headers : {
+                      'Content-Type' : 'application/json',
+                      Accept : 'application/json',
+                   },
+          });  
+          if(!result.ok) {
+             throw result; 
+          }   
+          
+          //response from backend
+         const resp = await result.json(); 
+         const lengthh = resp.mwl;
+         
+  //get the wishlist icon and span with topbar for quick display to the user that wishlist added  
+  var wi = document.getElementById('wishl');
+  var wip = document.getElementById('wishlp'); 
+  var tp = document.getElementById('topbar');  
+ 
+  wip.innerHTML = lengthh;  
+ 
+
+        } catch(err) {
+             const error = await err.text();
+             alert(error); 
+             return;
+        }
+            }); 
+            });      
+ 
+
+
+      //Add to cart action for users 
+            //cart adding for authenticated users
+            var atc = document.querySelectorAll('.atc'); 
+            atc.forEach((each)=>{  
+                each.addEventListener('click', async (e)=>{ 
+             var elemId = each.getAttribute('productId');  
+             var dat = {
+                 prodId : elemId,   
+             } 
+
+             try{
+          const result = await fetch('/addingtocart', {
+                   method : 'post',
+                   body : JSON.stringify(dat),
+                   headers : {
+                      'Content-Type' : 'application/json',
+                      Accept : 'application/json',
+                   },
+          });  
+          if(!result.ok) {
+             throw result; 
+          }   
+          
+          //response from backend
+         const resp = await result.json(); 
+         const lengthh = resp.mwl;
+         
+  //get the cart icon and span with topbar for quick display to the user that wishlist added  
+  var wi = document.getElementById('ucart');
+  var wip = document.getElementById('cartlp'); 
+  var tp = document.getElementById('topbar');  
+ 
+  wip.innerHTML = lengthh;  
+ 
+
+        } catch(err) {
+             const error = await err.text();
+             if(error.trim() == 'This action is only for authenticated users'.trim()) {
+                var loginform = document.getElementById('hiddenlf');
+                loginform.style.display = 'block';
+             } else {
+                  alert(error);
+             }
+             return;
+        }
+            }); 
+            });   
+
+
+
+
+
+
+
+
+
+    //Add to cart action for users 
+            //cart adding for authenticated users
+            var atcc = document.querySelector('.atcc');   
+                atcc.addEventListener('click', async (e)=>{ 
+             var elemId = atcc.getAttribute('productId');  
+             var dat = {
+                 prodId : elemId,  
+                 quantity : currentquant,  
+                 price : selectedPrice, 
+                 size : selectedName,
+             } 
+
+             try{
+          const result = await fetch('/addingtocart', {
+                   method : 'post',
+                   body : JSON.stringify(dat),
+                   headers : {
+                      'Content-Type' : 'application/json',
+                      Accept : 'application/json',
+                   },
+          });  
+          if(!result.ok) {
+             throw result; 
+          }   
+          
+          //response from backend
+         const resp = await result.json(); 
+         const lengthh = resp.mwl;
+         
+  //get the cart icon and span with topbar for quick display to the user that wishlist added  
+  var wi = document.getElementById('ucart');
+  var wip = document.getElementById('cartlp'); 
+  var tp = document.getElementById('topbar');  
+ 
+  wip.innerHTML = lengthh;  
+ 
+
+        } catch(err) {
+             const error = await err.text();
+             if(error.trim() == 'This action is only for authenticated users'.trim()) {
+                var loginform = document.getElementById('hiddenlf');
+                loginform.style.display = 'block';
+             } else {
+                  alert(error);
+             }
+             return;
+        }
+            });  
+           
+ 
+    </script>
+   
+</body>
+
+</html>
