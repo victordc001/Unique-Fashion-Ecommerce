@@ -200,68 +200,18 @@
                 var allbutton = document.querySelectorAll('button');
        allbutton.forEach((each)=>{
          each.disabled = true;
-       });
-
-
-                try{ 
-                 //track the package in this api link
-                  const resp = await fetch(`/tracking_my_package/287b2d2gv67/iniqFasbnxdxnsqv/${trackingcode}`, {
-                          method : 'GET', 
-                  });    
-                  if(!resp.ok){
-                      throw resp;
-                  }  
+       }); 
+               
                   setTimeout(()=>{  
-                  event.target.style.opacity = 3;
-                event.target.innerHTML = 'Tracked.';
-                event.target.disabled = false;  
-            }, 3000);
-                  const result = await resp.json();   
+                  event.target.style.opacity = 3; 
+                event.target.disabled = false;   
+                window.location.href = '/tracking_my_package/287b2d2gv67/iniqFasbnxdxnsqv/' + trackingcode; // Redirect to the tracking page
+                }, 2000);
+               
+             } 
+        }
+           
 
-                  const notification = document.getElementById('error-notification');
-    const errorMessage = document.getElementById('error-message');
-    
-    errorMessage.textContent = result.respp.detail; // Set the error message
-    notification.style.display = 'block'; // Show the notification
-
-    // Automatically hide the notification after 15 seconds
-    setTimeout(() => {
-        notification.style.display = 'none';
-    }, 15000);     
-
-                } catch(err) { 
-                    event.target.style.opacity = 3;
-                event.target.innerHTML = 'Track Package'; 
-
-                var allbutton = document.querySelectorAll('button');
-       allbutton.forEach((each)=>{
-         each.disabled = false;
-       });
-  
-                     const error = await err.json();   
-
-                     const notification = document.getElementById('error-notification');
-    const errorMessage = document.getElementById('error-message');
-    
-    errorMessage.textContent = error.respp.detail; // Set the error message
-    notification.style.display = 'block'; // Show the notification
-
-    // Automatically hide the notification after 15 seconds
-    setTimeout(() => {
-        notification.style.display = 'none';
-    }, 15000);  
-                }
-            }
-        }   
-
-
-        document.getElementById('cancel-button').addEventListener('click', () => {
-    document.getElementById('error-notification').style.display = 'none';
-});  
-
-document.getElementById('scancel-button').addEventListener('click', () => {
-    document.getElementById('success-notification').style.display = 'none';
-}); 
 
     </script>
 

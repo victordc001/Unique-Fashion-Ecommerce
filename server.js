@@ -508,29 +508,25 @@ app.get('/track-orders/:userId', async (req, res) => {
 
 
 //Tracking a package 
- app.use('/tracking_my_package/287b2d2gv67/iniqFasbnxdxnsqv/:trackingCode', authenticate);
-app.get('/tracking_my_package/287b2d2gv67/iniqFasbnxdxnsqv/:trackingCode', async (req,res)=>{
-   
-  const trackingNumber = req.params.trackingCode;
+ app.use('/tracking_my_package/287b2d2gv67/iniqFasbnxdxnsqv/:trackingCode', authenticate); 
+ app.get('/tracking_my_package/287b2d2gv67/iniqFasbnxdxnsqv/:trackingCode', async (req, res) => {
+    const trackingNumber = req.params.trackingCode;
 
-  //now let's check the tracking state from the database according to admin actions 
-  const theOrder= await OrdreqDb.findOne({ trackingCode: trackingNumber }); 
-  const theOrderState = theOrder ? theOrder.trackingState : null;
- 
+    const theOrder = await OrdreqDb.findOne({ trackingCode: trackingNumber });
+    const theOrderState = theOrder ? theOrder.trackingState : null;
 
-    const mywishlists = await WishlistDb.find({
-      wisher : res.locals.user.userId, 
-    });    
-    const mycarts = await CartDb.find({
-      carter : res.locals.user.userId, 
-    });  
-  
-    if(mywishlists.length > 0 || mycarts.length > 0) {
-     res.render('./pages/trackpage', { mwl: mywishlists.length, mct : mycarts.length, theOrderState, trackingNumber}); 
-    } else {
-   res.render('./pages/trackpage', { mwl : 0, mct : 0, respp});    
-    }    
-}); 
+    const mywishlists = await WishlistDb.find({ wisher: res.locals.user.userId });
+    const mycarts = await CartDb.find({ carter: res.locals.user.userId });
+
+    res.render('./pages/trackpage', {
+        mwl: mywishlists.length || 0,
+        mct: mycarts.length || 0,
+        theOrder,
+        theOrderState,
+        trackingNumber
+    });
+});
+
     
 
 // Update Tracking State Route
@@ -680,7 +676,8 @@ app.post('/manageorders/update-tracking-state', async (req, res) => {
     please don't hesitate to contact us.<br><br>
     Thank you for choosing Unique Fashion. We appreciate your business!<br><br>
     Best regards,<br>
-    Unique Fashion Team<br><br>
+     Unique Fashion Team<br><br> 
+     <small>For any inquiries, please contact us at <strong>ufashion744@gmail.com</strong>.</small>
     <small>Please rate your shopping experience with us!</small>
 `,
   };

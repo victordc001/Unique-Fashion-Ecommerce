@@ -68,15 +68,8 @@
         }
 
         /* Status-specific animations */
-        .vehicle-processing { animation: bounce 2s ease-in-out infinite; }
-        .vehicle-shipped { animation: moveVehicle 6s linear infinite; }
+        .vehicle-intransit { animation: moveVehicle 6s linear infinite; }
         .vehicle-delivered { animation: delivered-pulse 2s ease-in-out infinite; }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
-        }
 
         @keyframes delivered-pulse {
             0%, 100% { transform: scale(1); }
@@ -322,11 +315,8 @@
         }
 
         /* Status-specific styles */
-        .status-processing { background: linear-gradient(135deg, #ff9800, #ff5722); }
-        .status-shipped { background: linear-gradient(135deg, #2196f3, #03a9f4); }
-        .status-in-transit { background: linear-gradient(135deg, #9c27b0, #e91e63); }
-        .status-out-for-delivery { background: linear-gradient(135deg, #ff5722, #f44336); }
-        .status-delivered { background: linear-gradient(135deg, #4caf50, #8bc34a); }
+        .status-in-transit { background: linear-gradient(135deg, #ff7f50, #ff6347) }
+       .status-delivered { background: linear-gradient(135deg, #ff7f50, #ff6347); }
 
         /* Responsive design */
         @media (max-width: 768px) {
@@ -389,7 +379,7 @@
 </head>
 <body> 
     <%- include('../partials/topbar.ejs') %>
-    
+     <br><br>
     <div class="main-container">
         <div class="page-header">
             <h1 class="page-title">Track Your Package</h1> 
@@ -403,30 +393,21 @@
 
         <div class="tracking-container">
             <% 
-            // Determine status details based on theOrderState
-            let statusIcon = '📦';
-            let statusTitle = 'Order Placed';
-            let statusDescription = 'Your order has been placed and is being prepared';
-            let statusClass = 'status-processing';
-            let vehicleClass = 'vehicle-processing';
-            let progressWidth = '25%';
+            // Determine status details based on theOrderState (only In Transit and Delivered)
+            let statusIcon = '🚚';
+            let statusTitle = 'In Transit';
+            let statusDescription = 'Your package is on its way to you';
+            let statusClass = 'status-in-transit';
+            let vehicleClass = 'vehicle-intransit';
+            let progressWidth = '50%';
             
-            if (typeof theOrderState !== 'undefined' && theOrderState) {
-                if (theOrderState.inTransit) {
-                    statusIcon = '🚚';
-                    statusTitle = 'In Transit';
-                    statusDescription = 'Your package is on its way to you';
-                    statusClass = 'status-in-transit';
-                    vehicleClass = 'vehicle-shipped';
-                    progressWidth = '75%';
-                } else if (theOrderState.delivered) {
-                    statusIcon = '✅';
-                    statusTitle = 'Delivered';
-                    statusDescription = 'Your package has been successfully delivered';
-                    statusClass = 'status-delivered';
-                    vehicleClass = 'vehicle-delivered';
-                    progressWidth = '100%';
-                }
+            if (typeof theOrderState !== 'undefined' && theOrderState && theOrderState.delivered) {
+                statusIcon = '✅';
+                statusTitle = 'Delivered';
+                statusDescription = 'Your package has been successfully delivered';
+                statusClass = 'status-delivered';
+                vehicleClass = 'vehicle-delivered';
+                progressWidth = '100%';
             }
             %>
 
@@ -439,19 +420,31 @@
                             <div class="status-description"><%= statusDescription %></div>
                         </div>
                     </div>
-                    <div class="status-time">
-                        <%= new Date().toLocaleDateString('en-US', { 
-                            year: 'numeric', 
-                            month: 'long', 
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        }) %>
-                    </div>
+
+             <div class="status-time">     
+               <% if (theOrderState === 'inTransit' && theOrder && theOrder.dateAdded) { %>
+  <% currentDate = new Date(theOrder.dateAdded); %>
+  <p>Order placed at 
+    <%= currentDate.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }) %> 
+  </p>
+<% } else if (theOrderState === 'delivered' && theOrder) { %> 
+   <p>This order has been fulfilled and delivered as requested.</p>
+<% } else { %>
+  <p>Status information unavailable.</p>
+<% } %>
+
+</div> 
+
                 </div>
             </div>
 
-            <!-- Progress Tracker -->
+            <!-- Progress Tracker - Only 2 stages -->
             <div class="progress-tracker">
                 <div class="progress-steps">
                     <div class="progress-line">
@@ -459,33 +452,18 @@
                     </div>
                     
                     <div class="progress-step-container">
-                        <div class="progress-step <%= (theOrderState && ['processing', 'shipped', 'intransit', 'in-transit', 'ondelivery', 'out-for-delivery', 'delivered'].includes(theOrderState.toLowerCase())) ? 'completed' : '' %>">⚙️</div>
-                        <div class="step-label">Processing</div>
-                    </div>
-                    
-                    <div class="progress-step-container">
-                        <div class="progress-step <%= (theOrderState && ['shipped', 'intransit', 'in-transit', 'ondelivery', 'out-for-delivery', 'delivered'].includes(theOrderState.toLowerCase())) ? 'completed' : (theOrderState && theOrderState.toLowerCase() === 'shipped') ? 'active' : '' %>">📦</div>
-                        <div class="step-label">Shipped</div>
-                    </div>
-                    
-                    <div class="progress-step-container">
-                        <div class="progress-step <%= (theOrderState && ['intransit', 'in-transit', 'ondelivery', 'out-for-delivery', 'delivered'].includes(theOrderState.toLowerCase())) ? 'completed' : (theOrderState && ['intransit', 'in-transit'].includes(theOrderState.toLowerCase())) ? 'active' : '' %>">🚚</div>
+                        <div class="progress-step <%= (theOrderState && !theOrderState.delivered) ? 'active' : 'completed' %>">🚚</div>
                         <div class="step-label">In Transit</div>
                     </div>
                     
                     <div class="progress-step-container">
-                        <div class="progress-step <%= (theOrderState && ['ondelivery', 'out-for-delivery', 'delivered'].includes(theOrderState.toLowerCase())) ? 'completed' : (theOrderState && ['ondelivery', 'out-for-delivery'].includes(theOrderState.toLowerCase())) ? 'active' : '' %>">🚐</div>
-                        <div class="step-label">Out for Delivery</div>
-                    </div>
-                    
-                    <div class="progress-step-container">
-                        <div class="progress-step <%= (theOrderState && theOrderState.toLowerCase() === 'delivered') ? 'completed active' : '' %>">✅</div>
+                        <div class="progress-step <%= (theOrderState && theOrderState.delivered) ? 'completed active' : '' %>">✅</div>
                         <div class="step-label">Delivered</div>
                     </div>
                 </div>
             </div>
 
-            <div class="details-section">
+         <!---- <div class="details-section">
                 <button class="toggle-details" id="toggleButton">
                     <span>Show Tracking History</span>
                     <span id="toggleIcon">▼</span>
@@ -495,28 +473,45 @@
                     <div class="tracking-events">
                         <h3 style="color: #008080; margin-bottom: 20px; font-size: 1.3rem;">📋 Tracking History</h3>
                         
-                        <% if (typeof theOrderState !== 'undefined' && theOrderState) { %>
+                        <% if (typeof theOrderState !== 'undefined' && theOrderState && theOrderState.delivered) { %>
                             <div class="event-item">
-                                <div class="event-status">Current Status: <%= statusTitle %></div>
-                                <div class="event-location">Processing Center</div>
+                                <div class="event-status">Package Delivered</div>
+                                <div class="event-location">Final Destination</div>
                                 <div class="event-time"><%= new Date().toLocaleString() %></div>
                             </div>
                         <% } %>
                         
                         <div class="event-item">
-                            <div class="event-status">Order Confirmed</div>
-                            <div class="event-location">Order Management System</div>
-                            <div class="event-time"><%= new Date(Date.now() - 24*60*60*1000).toLocaleString() %></div>
+                            <div class="event-status">Package In Transit</div>
+                            <div class="event-location">Distribution Center</div>
+                            <div class="event-time">
+                                <% 
+                                let transitDate = new Date();
+                                if (typeof theOrder !== 'undefined' && theOrder && theOrder.dateAdded) {
+                                    transitDate = new Date(theOrder.dateAdded);
+                                    transitDate.setHours(transitDate.getHours() + 2); // 2 hours after order
+                                }
+                                %>
+                                <%= transitDate.toLocaleString() %>
+                            </div>
                         </div>
                         
                         <div class="event-item">
-                            <div class="event-status">Payment Processed</div>
-                            <div class="event-location">Payment Gateway</div>
-                            <div class="event-time"><%= new Date(Date.now() - 25*60*60*1000).toLocaleString() %></div>
+                            <div class="event-status">Order Placed</div>
+                            <div class="event-location">Order Management System</div>
+                            <div class="event-time">
+                                <% 
+                                let orderDate = new Date();
+                                if (typeof theOrder !== 'undefined' && theOrder && theOrder.dateAdded) {
+                                    orderDate = new Date(theOrder.dateAdded);
+                                }
+                                %>
+                                <%= orderDate.toLocaleString() %>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>--->
         </div>
     </div>
 
@@ -529,27 +524,16 @@
             const toggleIcon = document.getElementById('toggleIcon');
             const movingVehicle = document.getElementById('movingVehicle');
 
-            // Set vehicle animation based on status
-            const orderState = '<%= typeof theOrderState !== "undefined" ? theOrderState : "" %>';
-            if (orderState) {
-                switch(orderState.toLowerCase()) {
-                    case 'processing':
-                        movingVehicle.className = 'moving-vehicle vehicle-processing';
-                        movingVehicle.innerHTML = '⚙️';
-                        break;
-                    case 'shipped':
-                    case 'intransit':
-                    case 'in-transit':
-                    case 'ondelivery':
-                    case 'out-for-delivery':
-                        movingVehicle.className = 'moving-vehicle vehicle-shipped';
-                        movingVehicle.innerHTML = '🚚';
-                        break;
-                    case 'delivered':
-                        movingVehicle.className = 'moving-vehicle vehicle-delivered';
-                        movingVehicle.innerHTML = '✅';
-                        break;
-                }
+            // Set vehicle animation based on status (only 2 states now)
+            const orderState = '<%= typeof theOrderState !== "undefined" && theOrderState ? JSON.stringify(theOrderState) : "{}" %>';
+            const parsedOrderState = JSON.parse(orderState || '{}');
+            
+            if (parsedOrderState.delivered) {
+                movingVehicle.className = 'moving-vehicle vehicle-delivered';
+                movingVehicle.innerHTML = '✅';
+            } else {
+                movingVehicle.className = 'moving-vehicle vehicle-intransit';
+                movingVehicle.innerHTML = '🚚';
             }
 
             // Toggle details functionality
